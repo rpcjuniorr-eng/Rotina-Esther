@@ -719,10 +719,10 @@ function getCheckedMap() {
 // ── CONFIG ──
 const RANKS = [
   {name:'Guerreira',     min:0,   emoji:'⚔️', color:'#7ECFFF'},  // início
-  {name:'Super Saiyajin',min:80,  emoji:'⚡', color:'#FFD700'},  // ~2 dias completos
-  {name:'SSJ 2',         min:140, emoji:'💥', color:'#FF8C00'},  // ~3 dias completos
-  {name:'SSJ 3',         min:190, emoji:'🔥', color:'#FF4500'},  // ~4 dias completos
-  {name:'Lendária',      min:220, emoji:'🌟', color:'#FF00FF'},  // semana toda completa
+  {name:'Super Saiyajin',min:200, emoji:'⚡', color:'#FFD700'},  // semana 1 completa (~225pts)
+  {name:'SSJ 2',         min:430, emoji:'💥', color:'#FF8C00'},  // semana 2 completa (~450pts)
+  {name:'SSJ 3',         min:660, emoji:'🔥', color:'#FF4500'},  // semana 3 completa (~675pts)
+  {name:'Lendária',      min:880, emoji:'🌟', color:'#FF00FF'},  // mês completo (~900pts)
 ];
 
 const ACHIEVEMENTS = [
@@ -764,8 +764,9 @@ const state = {
 // ── INIT ──
 genStars(); genSparks();
 const saved = loadSaved();
+
+// Carrega APENAS os itens marcados e extras do save — ignora power/rank/spheres salvos
 if (saved) {
-  Object.assign(state, saved);
   state.unlockedAch = new Set(saved.unlockedAch || []);
   state.extraWeeks = saved.extraWeeks || {water:[],trash:[],closet:[]};
 }
@@ -780,7 +781,6 @@ document.querySelectorAll('.day-panel:not(#day-extras)').forEach(panel => {
   panel.querySelectorAll('.activity-item').forEach(it => it.addEventListener('click', ()=>toggle(it,day)));
 
   if (saved && saved.checkedItems) {
-    // restore saved state
     panel.querySelectorAll('.activity-item').forEach(it => {
       const key = panel.id + '§' + it.querySelector('.activity-name').textContent.trim();
       if (saved.checkedItems[key]) it.classList.add('done');
@@ -791,10 +791,29 @@ document.querySelectorAll('.day-panel:not(#day-extras)').forEach(panel => {
       panel.querySelectorAll('.activity-item').forEach(it=>it.classList.add('done'));
     }
   }
-  updateProgress(day);
 });
 
-if (!saved) recalcStateFromDOM();
+// Recalcula TUDO do zero a partir do DOM — nunca usa power/rank/spheres do localStorage
+recalcStateFromDOM();
+
+// Atualiza completedDays e esferas baseado no DOM
+document.querySelectorAll('.day-panel:not(#day-extras)').forEach(panel => {
+  const day = panel.id.replace('day-','');
+  const items = panel.querySelectorAll('.activity-item');
+  const done  = panel.querySelectorAll('.activity-item.done');
+  state.completedDays[day] = items.length > 0 && done.length === items.length;
+  document.getElementById('fill-'+day).style.width = (items.length ? done.length/items.length*100 : 0)+'%';
+  document.getElementById('count-'+day).textContent = done.length+'/'+items.length;
+  const msg = document.getElementById('complete-'+day);
+  if(msg) msg.classList.toggle('show', state.completedDays[day]);
+});
+
+const WEEK_DAYS=['segunda','terca','quarta','quinta','sexta'];
+state.spheres = WEEK_DAYS.filter(d=>state.completedDays[d]===true).length;
+let _streak=0; for(const d of WEEK_DAYS){if(state.completedDays[d]===true)_streak++;else break;}
+state.streak=_streak;
+updateSpheres(0, state.spheres);
+
 updateStats();
 checkAchievements();
 
@@ -813,6 +832,9 @@ checkAchievements();
 })();
 
 function recalcStateFromDOM() {
+  // Zera tudo antes de recalcular para não acumular com valores salvos
+  state.power=0; state.totalDone=0; state.baths=0;
+  state.schoolDays=0; state.meditations=0; state.readings=0;
   document.querySelectorAll('.day-panel:not(#day-extras) .activity-item.done').forEach(it=>{
     const pts=parseInt(it.dataset.pts||3);
     state.power+=pts; state.totalDone++;
@@ -822,6 +844,11 @@ function recalcStateFromDOM() {
     if(n.includes('Meditação')) state.meditations++;
     if(n.includes('Leitura'))   state.readings++;
   });
+  // Recalcula esferas e streak também
+  const WEEK_DAYS=['segunda','terca','quarta','quinta','sexta'];
+  state.spheres=WEEK_DAYS.filter(d=>state.completedDays[d]===true).length;
+  let streak=0; for(const d of WEEK_DAYS){if(state.completedDays[d]===true)streak++;else break;}
+  state.streak=streak;
 }
 
 // ── TOGGLE ──
