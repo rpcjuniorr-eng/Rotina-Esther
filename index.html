@@ -718,11 +718,11 @@ function getCheckedMap() {
 
 // ── CONFIG ──
 const RANKS = [
-  {name:'Guerreira',     min:0,   emoji:'⚔️', color:'#7ECFFF'},
-  {name:'Super Saiyajin',min:160, emoji:'⚡', color:'#FFD700'},
-  {name:'SSJ 2',         min:320, emoji:'💥', color:'#FF8C00'},
-  {name:'SSJ 3',         min:480, emoji:'🔥', color:'#FF4500'},
-  {name:'Lendária',      min:620, emoji:'🌟', color:'#FF00FF'},
+  {name:'Guerreira',     min:0,   emoji:'⚔️', color:'#7ECFFF'},  // início
+  {name:'Super Saiyajin',min:80,  emoji:'⚡', color:'#FFD700'},  // ~2 dias completos
+  {name:'SSJ 2',         min:140, emoji:'💥', color:'#FF8C00'},  // ~3 dias completos
+  {name:'SSJ 3',         min:190, emoji:'🔥', color:'#FF4500'},  // ~4 dias completos
+  {name:'Lendária',      min:220, emoji:'🌟', color:'#FF00FF'},  // semana toda completa
 ];
 
 const ACHIEVEMENTS = [
@@ -786,13 +786,9 @@ document.querySelectorAll('.day-panel:not(#day-extras)').forEach(panel => {
       if (saved.checkedItems[key]) it.classList.add('done');
     });
   } else {
-    // first time defaults
-    if (day==='segunda') panel.querySelectorAll('.activity-item').forEach(it=>it.classList.add('done'));
-    if (day==='terca') {
-      const dn=['Acordar','Banho','Lavar nariz','Escovar dente','Café da manhã','Atividade de casa','TV / Brincar','Almoçar'];
-      panel.querySelectorAll('.activity-item').forEach(it=>{
-        if(dn.some(d=>it.querySelector('.activity-name').textContent.trim().includes(d))) it.classList.add('done');
-      });
+    // first time defaults — segunda, terca e quarta já concluídas
+    if (day==='segunda' || day==='terca' || day==='quarta') {
+      panel.querySelectorAll('.activity-item').forEach(it=>it.classList.add('done'));
     }
   }
   updateProgress(day);
@@ -861,10 +857,10 @@ function updateProgress(day) {
   if(msg){if(isDayDone)msg.classList.add('show');else msg.classList.remove('show');}
   if(isDayDone && !wasDayDone) setTimeout(()=>triggerCelebration(day), 300);
   const prev=state.spheres;
-  state.spheres=Object.values(state.completedDays).filter(Boolean).length;
+  const WEEK_DAYS=['segunda','terca','quarta','quinta','sexta'];
+  state.spheres=WEEK_DAYS.filter(d=>state.completedDays[d]===true).length;
   updateSpheres(prev,state.spheres);
-  const days=['segunda','terca','quarta','quinta','sexta'];
-  let streak=0; for(const d of days){if(state.completedDays[d])streak++;else break;}
+  let streak=0; for(const d of WEEK_DAYS){if(state.completedDays[d]===true)streak++;else break;}
   state.streak=streak;
 }
 
