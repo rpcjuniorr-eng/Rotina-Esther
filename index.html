@@ -206,23 +206,41 @@ body{background:var(--dark);font-family:'Nunito',sans-serif;min-height:100vh;ove
 #bonusReveal{font-size:1rem;color:#cc88ff;font-weight:700;margin:10px 0 14px;padding:11px;border-radius:11px;background:rgba(150,0,200,.12);border:1px solid rgba(200,130,255,.25);line-height:1.5;}
 
 /* ── DAY COMPLETE CELEBRATION ── */
-.celebration-overlay{position:fixed;inset:0;z-index:500;pointer-events:none;display:none;}
+.celebration-overlay{position:fixed;inset:0;z-index:500;pointer-events:none;display:none;overflow:hidden;}
 .celebration-overlay.show{display:block;}
-.celebration-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 40%,rgba(255,215,0,.18) 0%,rgba(255,107,0,.10) 40%,transparent 70%);animation:celebBg .6s ease;}
-@keyframes celebBg{from{opacity:0}to{opacity:1}}
-.ssj-flash{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 30%,rgba(255,255,255,.95) 0%,rgba(255,215,0,.6) 30%,transparent 70%);animation:ssjFlash .5s ease forwards;}
-@keyframes ssjFlash{0%{opacity:0;transform:scale(.5)}30%{opacity:1;transform:scale(1.05)}100%{opacity:0;transform:scale(1.5)}}
-.celebration-text{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;animation:celebTextIn .6s cubic-bezier(.34,1.56,.64,1) .2s both;}
-@keyframes celebTextIn{from{opacity:0;transform:translate(-50%,-50%) scale(.3) rotate(-10deg)}to{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0)}}
-.celeb-title{font-family:'Bangers',cursive;font-size:clamp(2.5rem,12vw,6rem);color:#FFD700;letter-spacing:6px;text-shadow:0 0 30px #FFD700,0 0 60px #FF8C00,0 0 100px #FF4500,4px 4px 0 #6B3300;line-height:1;white-space:nowrap;}
-.celeb-sub{font-family:'Bangers',cursive;font-size:clamp(1rem,4vw,2rem);color:#fff;letter-spacing:4px;text-shadow:0 0 20px var(--aura);margin-top:8px;}
-.celeb-emoji-row{font-size:clamp(2rem,8vw,4rem);margin-top:12px;animation:emojiFloat 1s ease-in-out infinite alternate;}
-@keyframes emojiFloat{from{transform:translateY(0)}to{transform:translateY(-8px)}}
-.ki-ring{position:absolute;top:50%;left:50%;width:min(80vw,400px);height:min(80vw,400px);border-radius:50%;transform:translate(-50%,-55%);border:4px solid rgba(255,215,0,.5);box-shadow:0 0 40px rgba(255,215,0,.4),inset 0 0 40px rgba(255,215,0,.2);animation:kiRingExpand 1.2s ease forwards;}
-@keyframes kiRingExpand{0%{transform:translate(-50%,-55%) scale(0);opacity:1}100%{transform:translate(-50%,-55%) scale(2.5);opacity:0}}
-.ki-ring-2{animation-delay:.3s;border-color:rgba(255,107,0,.5);box-shadow:0 0 40px rgba(255,107,0,.4);}
-.ki-ring-3{animation-delay:.6s;border-color:rgba(126,207,255,.5);box-shadow:0 0 40px rgba(126,207,255,.4);}
-.celeb-sparks-canvas{position:absolute;inset:0;pointer-events:none;}
+
+/* 1) SSJ Flash */
+.ssj-flash{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 40%,#fff 0%,rgba(255,215,0,.8) 25%,rgba(255,107,0,.4) 55%,transparent 75%);opacity:0;animation:ssjFlash .7s ease forwards;}
+@keyframes ssjFlash{0%{opacity:0}20%{opacity:1}100%{opacity:0}}
+
+/* 2) Ki rings */
+.ki-ring{position:absolute;top:50%;left:50%;width:min(90vw,440px);height:min(90vw,440px);border-radius:50%;transform:translate(-50%,-50%) scale(0);border:5px solid rgba(255,215,0,.7);box-shadow:0 0 50px rgba(255,215,0,.5),inset 0 0 30px rgba(255,215,0,.2);animation:kiRingExpand 1.4s cubic-bezier(.2,.8,.4,1) forwards;}
+.ki-ring-2{width:min(70vw,340px);height:min(70vw,340px);animation-delay:.25s;border-color:rgba(255,107,0,.7);box-shadow:0 0 50px rgba(255,107,0,.5);}
+.ki-ring-3{width:min(50vw,240px);height:min(50vw,240px);animation-delay:.5s;border-color:rgba(126,207,255,.7);box-shadow:0 0 50px rgba(126,207,255,.5);}
+@keyframes kiRingExpand{0%{transform:translate(-50%,-50%) scale(0);opacity:1}70%{opacity:.7}100%{transform:translate(-50%,-50%) scale(3);opacity:0}}
+
+/* 3) SSJ aura glow bg */
+.ssj-aura{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 60%,rgba(255,215,0,.25) 0%,rgba(255,107,0,.12) 40%,transparent 70%);animation:auraPulse 1s ease-in-out infinite alternate .5s;}
+@keyframes auraPulse{from{opacity:.6}to{opacity:1}}
+
+/* Lightning bolts */
+.lightning{position:absolute;width:3px;border-radius:2px;background:linear-gradient(180deg,#fff,#FFD700,transparent);animation:boltFlash .3s ease-in-out infinite;}
+@keyframes boltFlash{0%,100%{opacity:0}50%{opacity:1}}
+
+/* Central text */
+.celebration-text{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;z-index:10;width:90vw;animation:celebTextIn .5s cubic-bezier(.34,1.56,.64,1) .15s both;}
+@keyframes celebTextIn{from{opacity:0;transform:translate(-50%,-50%) scale(.2) rotate(-8deg)}to{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0)}}
+.celeb-chars{font-size:clamp(2.5rem,14vw,7rem);line-height:1;margin-bottom:4px;animation:charsFloat .8s ease-in-out infinite alternate .3s;}
+@keyframes charsFloat{from{transform:translateY(0) scale(1)}to{transform:translateY(-10px) scale(1.05)}}
+.celeb-title{font-family:'Bangers',cursive;font-size:clamp(2.2rem,11vw,5.5rem);color:#FFD700;letter-spacing:6px;text-shadow:0 0 30px #FFD700,0 0 70px #FF8C00,0 0 120px #FF4500,4px 4px 0 #5a2800,-2px -2px 0 #5a2800;line-height:1.05;animation:titlePop .4s cubic-bezier(.34,1.56,.64,1) .3s both;}
+@keyframes titlePop{from{opacity:0;transform:scale(.5)}to{opacity:1;transform:scale(1)}}
+.celeb-sub{font-family:'Bangers',cursive;font-size:clamp(1rem,5vw,2rem);color:#fff;letter-spacing:5px;text-shadow:0 0 20px var(--aura),0 0 40px var(--aura);margin-top:6px;animation:titlePop .4s cubic-bezier(.34,1.56,.64,1) .5s both;}
+.celeb-pts{font-family:'Bangers',cursive;font-size:clamp(.9rem,3.5vw,1.5rem);color:#FFD700;letter-spacing:3px;margin-top:8px;opacity:.9;animation:titlePop .4s ease .7s both;}
+.celeb-tap{font-size:clamp(.7rem,2.5vw,1rem);color:rgba(255,255,255,.5);margin-top:14px;letter-spacing:2px;animation:tapBlink 1s ease-in-out infinite 1.5s;}
+@keyframes tapBlink{0%,100%{opacity:.5}50%{opacity:.15}}
+
+/* Canvas */
+.celeb-sparks-canvas{position:absolute;inset:0;pointer-events:none;z-index:5;}
 
 /* character */
 .character-badge{position:fixed;bottom:16px;right:16px;z-index:20;font-size:2.5rem;filter:drop-shadow(0 0 12px rgba(255,215,0,.7));animation:charFloat 3s ease-in-out infinite alternate;cursor:pointer;user-select:none;}
@@ -293,16 +311,16 @@ body{background:var(--dark);font-family:'Nunito',sans-serif;min-height:100vh;ove
 <!-- CONTAINER -->
 <div class="container">
   <div class="tab-row">
-    <button class="day-tab active" onclick="showDay('segunda',this)">⚔️ Segunda</button>
-    <button class="day-tab" onclick="showDay('terca',this)">🌟 Terça</button>
-    <button class="day-tab" onclick="showDay('quarta',this)">💥 Quarta</button>
-    <button class="day-tab" onclick="showDay('quinta',this)">🔥 Quinta</button>
-    <button class="day-tab" onclick="showDay('sexta',this)">🐉 Sexta</button>
+    <button class="day-tab" id="tab-segunda" onclick="showDay('segunda',this)">⚔️ Segunda</button>
+    <button class="day-tab" id="tab-terca" onclick="showDay('terca',this)">🌟 Terça</button>
+    <button class="day-tab" id="tab-quarta" onclick="showDay('quarta',this)">💥 Quarta</button>
+    <button class="day-tab" id="tab-quinta" onclick="showDay('quinta',this)">🔥 Quinta</button>
+    <button class="day-tab" id="tab-sexta" onclick="showDay('sexta',this)">🐉 Sexta</button>
     <button class="day-tab extras-tab" onclick="showDay('extras',this)">⭐ Extras</button>
   </div>
 
   <!-- SEGUNDA -->
-  <div class="day-panel active" id="day-segunda">
+  <div class="day-panel" id="day-segunda">
     <div class="day-progress"><span class="day-progress-label">⚡ KI</span><div class="day-progress-track"><div class="day-progress-fill" id="fill-segunda"></div></div><span class="day-progress-count" id="count-segunda">0/0</span></div>
     <div class="day-header"><div class="day-title">⚔️ Segunda-Feira ⚔️</div></div>
     <div class="schedule-grid">
@@ -783,6 +801,20 @@ document.querySelectorAll('.day-panel:not(#day-extras)').forEach(panel => {
 if (!saved) recalcStateFromDOM();
 updateStats();
 checkAchievements();
+
+// ── AUTO DIA ATUAL ──
+(function(){
+  const map = {1:'segunda',2:'terca',3:'quarta',4:'quinta',5:'sexta'};
+  const dow = new Date().getDay(); // 0=dom,1=seg,...,6=sab
+  const dayKey = map[dow] || 'segunda'; // fim de semana → segunda
+  const btn = document.getElementById('tab-' + dayKey);
+  if(btn) showDay(dayKey, btn);
+  else {
+    // fallback: segunda
+    const fb = document.getElementById('tab-segunda');
+    if(fb) showDay('segunda', fb);
+  }
+})();
 
 function recalcStateFromDOM() {
   document.querySelectorAll('.day-panel:not(#day-extras) .activity-item.done').forEach(it=>{
