@@ -31,12 +31,11 @@ body{background:var(--dark);font-family:'Nunito',sans-serif;min-height:100vh;ove
 .header{position:relative;z-index:10;text-align:center;padding:28px 20px 10px;}
 
 /* Dragon + Balls row */
-.dragon-scene{display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:12px;flex-wrap:nowrap;overflow:hidden;}
+.dragon-scene{display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:12px;flex-wrap:nowrap;overflow:visible;background:none;}
 .dragon-left{font-size:clamp(2rem,8vw,4rem);filter:drop-shadow(0 0 16px #FFD700);animation:dragonFloat 3s ease-in-out infinite alternate;flex-shrink:0;transform:scaleX(-1);}
 .dragon-right{font-size:clamp(2rem,8vw,4rem);filter:drop-shadow(0 0 16px #FFD700);animation:dragonFloat 3s ease-in-out infinite alternate;flex-shrink:0;animation-delay:.5s;}
 @keyframes dragonFloat{from{transform:translateY(0) rotate(-4deg)}to{transform:translateY(-10px) rotate(4deg)}}
-.dragon-right{animation-name:dragonFloatR;}
-@keyframes dragonFloatR{from{transform:translateY(0) rotate(4deg) scaleX(1)}to{transform:translateY(-10px) rotate(-4deg) scaleX(1)}}
+.dragon-left, .dragon-right{background:none!important;-webkit-text-fill-color:initial;mix-blend-mode:normal;}
 .dragon-left{animation-name:dragonFloatL;}
 @keyframes dragonFloatL{from{transform:translateY(0) rotate(-4deg) scaleX(-1)}to{transform:translateY(-10px) rotate(4deg) scaleX(-1)}}
 
@@ -60,7 +59,7 @@ body{background:var(--dark);font-family:'Nunito',sans-serif;min-height:100vh;ove
 .title-glow{font-family:'Bangers',cursive;font-size:clamp(2.8rem,10vw,7rem);color:var(--gold);letter-spacing:5px;text-shadow:0 0 20px #FFD700,0 0 50px #FF8C00,5px 5px 0 #6B3300,-2px -2px 0 #6B3300;animation:titlePulse 2.5s ease-in-out infinite alternate;display:block;line-height:1;}
 @keyframes titlePulse{from{text-shadow:0 0 20px #FFD700,0 0 40px #FF8C00,5px 5px 0 #6B3300}to{text-shadow:0 0 50px #FFD700,0 0 100px #FF8C00,0 0 150px #FFFF00,5px 5px 0 #6B3300}}
 .subtitle{font-family:'Bangers',cursive;font-size:clamp(.9rem,3vw,1.4rem);color:var(--aura);letter-spacing:8px;text-shadow:0 0 15px var(--aura);margin-top:4px;}
-.title-line{height:3px;border-radius:2px;background:linear-gradient(90deg,transparent,var(--gold),var(--orange),var(--gold),transparent);margin:8px auto 0;width:80%;max-width:500px;}
+.title-line{display:none;}
 
 /* ── STATS ── */
 .stats-bar{position:relative;z-index:10;display:flex;flex-wrap:wrap;gap:10px;justify-content:center;padding:16px 16px 12px;}
@@ -205,6 +204,25 @@ body{background:var(--dark);font-family:'Nunito',sans-serif;min-height:100vh;ove
 .bonus-modal{background:linear-gradient(135deg,#18003a,#360070);border-color:#cc66ff;box-shadow:0 0 55px rgba(150,0,200,.45)!important;}
 .bonus-modal .modal-title{color:#cc66ff;text-shadow:0 0 18px #cc66ff;}
 #bonusReveal{font-size:1rem;color:#cc88ff;font-weight:700;margin:10px 0 14px;padding:11px;border-radius:11px;background:rgba(150,0,200,.12);border:1px solid rgba(200,130,255,.25);line-height:1.5;}
+
+/* ── DAY COMPLETE CELEBRATION ── */
+.celebration-overlay{position:fixed;inset:0;z-index:500;pointer-events:none;display:none;}
+.celebration-overlay.show{display:block;}
+.celebration-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 40%,rgba(255,215,0,.18) 0%,rgba(255,107,0,.10) 40%,transparent 70%);animation:celebBg .6s ease;}
+@keyframes celebBg{from{opacity:0}to{opacity:1}}
+.ssj-flash{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 30%,rgba(255,255,255,.95) 0%,rgba(255,215,0,.6) 30%,transparent 70%);animation:ssjFlash .5s ease forwards;}
+@keyframes ssjFlash{0%{opacity:0;transform:scale(.5)}30%{opacity:1;transform:scale(1.05)}100%{opacity:0;transform:scale(1.5)}}
+.celebration-text{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;animation:celebTextIn .6s cubic-bezier(.34,1.56,.64,1) .2s both;}
+@keyframes celebTextIn{from{opacity:0;transform:translate(-50%,-50%) scale(.3) rotate(-10deg)}to{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0)}}
+.celeb-title{font-family:'Bangers',cursive;font-size:clamp(2.5rem,12vw,6rem);color:#FFD700;letter-spacing:6px;text-shadow:0 0 30px #FFD700,0 0 60px #FF8C00,0 0 100px #FF4500,4px 4px 0 #6B3300;line-height:1;white-space:nowrap;}
+.celeb-sub{font-family:'Bangers',cursive;font-size:clamp(1rem,4vw,2rem);color:#fff;letter-spacing:4px;text-shadow:0 0 20px var(--aura);margin-top:8px;}
+.celeb-emoji-row{font-size:clamp(2rem,8vw,4rem);margin-top:12px;animation:emojiFloat 1s ease-in-out infinite alternate;}
+@keyframes emojiFloat{from{transform:translateY(0)}to{transform:translateY(-8px)}}
+.ki-ring{position:absolute;top:50%;left:50%;width:min(80vw,400px);height:min(80vw,400px);border-radius:50%;transform:translate(-50%,-55%);border:4px solid rgba(255,215,0,.5);box-shadow:0 0 40px rgba(255,215,0,.4),inset 0 0 40px rgba(255,215,0,.2);animation:kiRingExpand 1.2s ease forwards;}
+@keyframes kiRingExpand{0%{transform:translate(-50%,-55%) scale(0);opacity:1}100%{transform:translate(-50%,-55%) scale(2.5);opacity:0}}
+.ki-ring-2{animation-delay:.3s;border-color:rgba(255,107,0,.5);box-shadow:0 0 40px rgba(255,107,0,.4);}
+.ki-ring-3{animation-delay:.6s;border-color:rgba(126,207,255,.5);box-shadow:0 0 40px rgba(126,207,255,.4);}
+.celeb-sparks-canvas{position:absolute;inset:0;pointer-events:none;}
 
 /* character */
 .character-badge{position:fixed;bottom:16px;right:16px;z-index:20;font-size:2.5rem;filter:drop-shadow(0 0 12px rgba(255,215,0,.7));animation:charFloat 3s ease-in-out infinite alternate;cursor:pointer;user-select:none;}
@@ -532,7 +550,115 @@ body{background:var(--dark);font-family:'Nunito',sans-serif;min-height:100vh;ove
 
 <div class="character-badge" onclick="kiBlast(this)">🐉</div>
 
+<!-- CELEBRATION OVERLAY -->
+<div class="celebration-overlay" id="celebOverlay">
+  <div class="celebration-bg"></div>
+  <div class="ssj-flash"></div>
+  <div class="ki-ring"></div>
+  <div class="ki-ring ki-ring-2"></div>
+  <div class="ki-ring ki-ring-3"></div>
+  <canvas class="celeb-sparks-canvas" id="celebCanvas"></canvas>
+  <div class="celebration-text">
+    <div class="celeb-title" id="celebTitle">MISSÃO<br>CUMPRIDA!</div>
+    <div class="celeb-sub" id="celebSub">⚡ DIA COMPLETO ⚡</div>
+    <div class="celeb-emoji-row">🐉⚡🌟⚡🐉</div>
+  </div>
+</div>
+
 <script>
+// ── CELEBRATION ──
+let celebTimeout = null;
+const DAY_NAMES = {segunda:'Segunda-Feira',terca:'Terça-Feira',quarta:'Quarta-Feira',quinta:'Quinta-Feira',sexta:'Sexta-Feira'};
+
+function triggerCelebration(day) {
+  const overlay = document.getElementById('celebOverlay');
+  const canvas  = document.getElementById('celebCanvas');
+  document.getElementById('celebTitle').innerHTML = 'MISSÃO<br>CUMPRIDA!';
+  document.getElementById('celebSub').textContent  = '⚡ ' + (DAY_NAMES[day]||'DIA').toUpperCase() + ' COMPLETO ⚡';
+
+  // reset animation
+  overlay.classList.remove('show');
+  void overlay.offsetWidth;
+  overlay.classList.add('show');
+  overlay.style.pointerEvents = 'all';
+
+  // canvas sparks (dragon balls rain + ki particles)
+  canvas.width  = window.innerWidth;
+  canvas.height = window.innerHeight;
+  const ctx = canvas.getContext('2d');
+  const particles = [];
+
+  // ki particles
+  for(let i=0;i<80;i++) particles.push({
+    x: Math.random()*canvas.width, y: canvas.height + Math.random()*100,
+    vx: (Math.random()-.5)*6, vy: -(Math.random()*12+6),
+    r: Math.random()*4+2, alpha:1, type:'ki',
+    color: ['#FFD700','#FF8C00','#FFFAB0','#7ECFFF','#FF4500'][Math.floor(Math.random()*5)],
+    delay: Math.random()*800,
+  });
+
+  // dragon ball drops
+  for(let i=0;i<14;i++) particles.push({
+    x: Math.random()*canvas.width, y: -40 - Math.random()*200,
+    vx: (Math.random()-.5)*3, vy: Math.random()*4+3,
+    r: Math.random()*14+10, alpha:1, type:'ball',
+    delay: Math.random()*1000, rotation: Math.random()*Math.PI*2,
+  });
+
+  let start = null;
+  function drawBall(ctx, x, y, r, rot) {
+    ctx.save(); ctx.translate(x,y); ctx.rotate(rot);
+    const grd = ctx.createRadialGradient(-r*.3,-r*.3,r*.05, 0,0,r);
+    grd.addColorStop(0,'#FFE066'); grd.addColorStop(.6,'#FF8C00'); grd.addColorStop(1,'#CC4400');
+    ctx.beginPath(); ctx.arc(0,0,r,0,Math.PI*2);
+    ctx.fillStyle=grd; ctx.fill();
+    ctx.fillStyle='#CC2200';
+    ctx.beginPath(); ctx.arc(0,0,r*.18,0,Math.PI*2); ctx.fill();
+    ctx.restore();
+  }
+
+  function animCeleb(ts) {
+    if(!start) start=ts;
+    const elapsed=ts-start;
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    let alive=false;
+    particles.forEach(p=>{
+      if(elapsed<p.delay){alive=true;return;}
+      const t=(elapsed-p.delay)/1000;
+      p.x+=p.vx; p.vy+=p.type==='ki'?0.15:-0.05;
+      p.y+=p.vy; p.alpha=Math.max(0,1-t*.5);
+      if(p.alpha>0) alive=true;
+      if(p.type==='ki'){
+        ctx.save(); ctx.globalAlpha=p.alpha;
+        ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+        ctx.fillStyle=p.color;
+        ctx.shadowColor=p.color; ctx.shadowBlur=12;
+        ctx.fill(); ctx.restore();
+      } else {
+        if(p.rotation!==undefined) p.rotation+=.03;
+        ctx.save(); ctx.globalAlpha=p.alpha;
+        drawBall(ctx,p.x,p.y,p.r,p.rotation||0);
+        ctx.restore();
+      }
+    });
+    if(alive && elapsed<4000) requestAnimationFrame(animCeleb);
+    else ctx.clearRect(0,0,canvas.width,canvas.height);
+  }
+  requestAnimationFrame(animCeleb);
+  kiBlast(document.querySelector('.character-badge'));
+
+  if(celebTimeout) clearTimeout(celebTimeout);
+  celebTimeout = setTimeout(()=>{
+    overlay.classList.remove('show');
+    overlay.style.pointerEvents='none';
+  }, 3800);
+  overlay.onclick = ()=>{
+    overlay.classList.remove('show');
+    overlay.style.pointerEvents='none';
+    if(celebTimeout) clearTimeout(celebTimeout);
+  };
+}
+
 // ── SAVE/LOAD ──
 const SAVE_KEY = 'rotina_esther_v2';
 
@@ -696,10 +822,12 @@ function updateProgress(day) {
   const pct  =items.length?done.length/items.length*100:0;
   document.getElementById('fill-'+day).style.width=pct+'%';
   document.getElementById('count-'+day).textContent=done.length+'/'+items.length;
+  const wasDayDone = state.completedDays[day];
   const isDayDone=items.length>0&&done.length===items.length;
   state.completedDays[day]=isDayDone;
   const msg=document.getElementById('complete-'+day);
   if(msg){if(isDayDone)msg.classList.add('show');else msg.classList.remove('show');}
+  if(isDayDone && !wasDayDone) setTimeout(()=>triggerCelebration(day), 300);
   const prev=state.spheres;
   state.spheres=Object.values(state.completedDays).filter(Boolean).length;
   updateSpheres(prev,state.spheres);
