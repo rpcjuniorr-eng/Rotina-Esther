@@ -797,11 +797,6 @@ document.querySelectorAll('.day-panel:not(#day-extras)').forEach(panel => {
       const key = panel.id + '§' + it.querySelector('.activity-name').textContent.trim();
       if (saved.checkedItems[key] === true) it.classList.add('done');
     });
-  } else {
-    // Primeiro acesso — seg, ter e qua já concluídas
-    if (day==='segunda' || day==='terca' || day==='quarta') {
-      panel.querySelectorAll('.activity-item').forEach(it=>it.classList.add('done'));
-    }
   }
 
   const items = panel.querySelectorAll('.activity-item');
@@ -843,18 +838,6 @@ if (!saved) {
 updateSpheres(0, state.spheres);
 updateStats();
 checkAchievements();
-
-// ── AUTO DIA ATUAL ──
-(function(){
-  const map={1:'segunda',2:'terca',3:'quarta',4:'quinta',5:'sexta'};
-  const dow = new Date().getDay(); // 0=dom,1=seg,2=ter,3=qua,4=qui,5=sex,6=sab
-  const dayKey = map[dow] || 'segunda'; // fim de semana → segunda
-  setTimeout(()=>{
-    const btn = document.getElementById('tab-'+dayKey);
-    if(btn) showDay(dayKey, btn);
-    else showDay('segunda', document.getElementById('tab-segunda'));
-  }, 50);
-})();
 
 // ── TOGGLE ──
 function toggle(el, day) {
@@ -1104,6 +1087,16 @@ function kiBlast(el){
 }
 function genStars(){const c=document.getElementById('stars');for(let i=0;i<100;i++){const s=document.createElement('div');s.className='star';const sz=Math.random()*2.5+.5;s.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--d:${(Math.random()*4+2).toFixed(1)}s;animation-delay:${(Math.random()*6).toFixed(1)}s;`;c.appendChild(s);}}
 function genSparks(){const c=document.getElementById('sparks');const cls=['#FFD700','#FF8C00','#7ECFFF','#cc88ff'];for(let i=0;i<16;i++){const s=document.createElement('div');s.className='spark';const cl=cls[i%cls.length];s.style.cssText=`left:${Math.random()*100}%;background:${cl};box-shadow:0 0 5px ${cl};--d:${(Math.random()*8+5).toFixed(1)}s;--x:${(Math.random()*180-90).toFixed(0)}px;animation-delay:${(Math.random()*10).toFixed(1)}s;`;c.appendChild(s);}}
+
+// ── AUTO DIA ATUAL — roda depois de tudo definido ──
+(function(){
+  const map={1:'segunda',2:'terca',3:'quarta',4:'quinta',5:'sexta'};
+  const dow = new Date().getDay();
+  const dayKey = map[dow] || 'segunda';
+  const btn = document.getElementById('tab-'+dayKey);
+  if(btn) showDay(dayKey, btn);
+  else showDay('segunda', document.getElementById('tab-segunda'));
+})();
 </script>
 </body>
-</html>
+                                                                                                                                                                     </html>
