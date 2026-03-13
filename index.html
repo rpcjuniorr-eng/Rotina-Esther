@@ -311,16 +311,16 @@ body{background:var(--dark);font-family:'Nunito',sans-serif;min-height:100vh;ove
 <!-- CONTAINER -->
 <div class="container">
   <div class="tab-row">
-    <button class="day-tab" id="tab-segunda" onclick="showDay('segunda',this)">⚔️ Segunda</button>
-    <button class="day-tab" id="tab-terca" onclick="showDay('terca',this)">🌟 Terça</button>
-    <button class="day-tab" id="tab-quarta" onclick="showDay('quarta',this)">💥 Quarta</button>
-    <button class="day-tab" id="tab-quinta" onclick="showDay('quinta',this)">🔥 Quinta</button>
-    <button class="day-tab" id="tab-sexta" onclick="showDay('sexta',this)">🐉 Sexta</button>
+    <button class="day-tab active" onclick="showDay('segunda',this)">⚔️ Segunda</button>
+    <button class="day-tab" onclick="showDay('terca',this)">🌟 Terça</button>
+    <button class="day-tab" onclick="showDay('quarta',this)">💥 Quarta</button>
+    <button class="day-tab" onclick="showDay('quinta',this)">🔥 Quinta</button>
+    <button class="day-tab" onclick="showDay('sexta',this)">🐉 Sexta</button>
     <button class="day-tab extras-tab" onclick="showDay('extras',this)">⭐ Extras</button>
   </div>
 
   <!-- SEGUNDA -->
-  <div class="day-panel" id="day-segunda">
+  <div class="day-panel active" id="day-segunda">
     <div class="day-progress"><span class="day-progress-label">⚡ KI</span><div class="day-progress-track"><div class="day-progress-fill" id="fill-segunda"></div></div><span class="day-progress-count" id="count-segunda">0/0</span></div>
     <div class="day-header"><div class="day-title">⚔️ Segunda-Feira ⚔️</div></div>
     <div class="schedule-grid">
@@ -678,7 +678,7 @@ function triggerCelebration(day) {
 }
 
 // ── SAVE/LOAD ──
-const SAVE_KEY = 'rotina_esther_v3';
+const SAVE_KEY = 'rotina_esther_v4';
 
 function saveState() {
   try {
@@ -692,7 +692,6 @@ function saveState() {
       schoolDays: state.schoolDays,
       meditations: state.meditations,
       readings: state.readings,
-      weeksCompleted: state.weeksCompleted,
       completedDays: state.completedDays,
       unlockedAch: [...state.unlockedAch],
       extraWeeks: state.extraWeeks,
@@ -703,6 +702,8 @@ function saveState() {
 
 function loadSaved() {
   try {
+    // Limpa versões antigas automaticamente
+    ['rotina_esther_v1','rotina_esther_v2','rotina_esther_v3'].forEach(k=>localStorage.removeItem(k));
     const raw = localStorage.getItem(SAVE_KEY);
     return raw ? JSON.parse(raw) : null;
   } catch(e) { return null; }
@@ -719,11 +720,11 @@ function getCheckedMap() {
 
 // ── CONFIG ──
 const RANKS = [
-  {name:'Guerreira',     min:0,   emoji:'⚔️', color:'#7ECFFF'},  // início
-  {name:'Super Saiyajin',min:200, emoji:'⚡', color:'#FFD700'},  // semana 1 completa (~225pts)
-  {name:'SSJ 2',         min:430, emoji:'💥', color:'#FF8C00'},  // semana 2 completa (~450pts)
-  {name:'SSJ 3',         min:660, emoji:'🔥', color:'#FF4500'},  // semana 3 completa (~675pts)
-  {name:'Lendária',      min:880, emoji:'🌟', color:'#FF00FF'},  // mês completo (~900pts)
+  {name:'Guerreira',     min:0,   emoji:'⚔️', color:'#7ECFFF'},
+  {name:'Super Saiyajin',min:200, emoji:'⚡', color:'#FFD700'},
+  {name:'SSJ 2',         min:430, emoji:'💥', color:'#FF8C00'},
+  {name:'SSJ 3',         min:660, emoji:'🔥', color:'#FF4500'},
+  {name:'Lendária',      min:880, emoji:'🌟', color:'#FF00FF'},
 ];
 
 const ACHIEVEMENTS = [
@@ -758,7 +759,6 @@ const BONUSES = [
 const state = {
   power:0, streak:0, spheres:0, rank:0,
   totalDone:0, baths:0, schoolDays:0, meditations:0, readings:0,
-  weeksCompleted:0,
   completedDays:{}, unlockedAch:new Set(),
   extraWeeks:{water:[],trash:[],closet:[]},
 };
@@ -768,20 +768,18 @@ genStars(); genSparks();
 const saved = loadSaved();
 
 if (saved) {
-  // Restaura TUDO do save — power, rank, esferas, streak, conquistas, extras, semanas
-  state.power        = saved.power        || 0;
-  state.streak       = saved.streak       || 0;
-  state.spheres      = saved.spheres      || 0;
-  state.rank         = saved.rank         || 0;
-  state.totalDone    = saved.totalDone    || 0;
-  state.baths        = saved.baths        || 0;
-  state.schoolDays   = saved.schoolDays   || 0;
-  state.meditations  = saved.meditations  || 0;
-  state.readings     = saved.readings     || 0;
-  state.weeksCompleted = saved.weeksCompleted || 0;
-  state.completedDays  = saved.completedDays  || {};
-  state.unlockedAch    = new Set(saved.unlockedAch || []);
-  state.extraWeeks     = saved.extraWeeks || {water:[],trash:[],closet:[]};
+  state.power       = saved.power       || 0;
+  state.streak      = saved.streak      || 0;
+  state.spheres     = saved.spheres     || 0;
+  state.rank        = saved.rank        || 0;
+  state.totalDone   = saved.totalDone   || 0;
+  state.baths       = saved.baths       || 0;
+  state.schoolDays  = saved.schoolDays  || 0;
+  state.meditations = saved.meditations || 0;
+  state.readings    = saved.readings    || 0;
+  state.completedDays = saved.completedDays || {};
+  state.unlockedAch   = new Set(saved.unlockedAch || []);
+  state.extraWeeks    = saved.extraWeeks || {water:[],trash:[],closet:[]};
 }
 
 renderExtras(); renderBiweekly(); renderAchievements();
@@ -795,7 +793,6 @@ document.querySelectorAll('.day-panel:not(#day-extras)').forEach(panel => {
   panel.querySelectorAll('.activity-item').forEach(it => it.addEventListener('click', ()=>toggle(it,day)));
 
   if (saved && saved.checkedItems) {
-    // Restaura visual de cada item pelo que foi salvo
     panel.querySelectorAll('.activity-item').forEach(it => {
       const key = panel.id + '§' + it.querySelector('.activity-name').textContent.trim();
       if (saved.checkedItems[key] === true) it.classList.add('done');
@@ -807,7 +804,6 @@ document.querySelectorAll('.day-panel:not(#day-extras)').forEach(panel => {
     }
   }
 
-  // Atualiza barra de progresso visual do dia
   const items = panel.querySelectorAll('.activity-item');
   const done  = panel.querySelectorAll('.activity-item.done');
   document.getElementById('fill-'+day).style.width = (items.length ? done.length/items.length*100 : 0)+'%';
@@ -818,7 +814,7 @@ document.querySelectorAll('.day-panel:not(#day-extras)').forEach(panel => {
   }
 });
 
-// Se não há save, recalcula tudo do DOM (primeiro acesso)
+// Primeiro acesso: recalcula tudo do DOM
 if (!saved) {
   state.power=0; state.totalDone=0; state.baths=0;
   state.schoolDays=0; state.meditations=0; state.readings=0;
@@ -831,15 +827,15 @@ if (!saved) {
     if(n.includes('Meditação')) state.meditations++;
     if(n.includes('Leitura'))   state.readings++;
   });
-  const WEEK_DAYS=['segunda','terca','quarta','quinta','sexta'];
+  const WD=['segunda','terca','quarta','quinta','sexta'];
   document.querySelectorAll('.day-panel:not(#day-extras)').forEach(panel => {
-    const day = panel.id.replace('day-','');
-    const items = panel.querySelectorAll('.activity-item');
-    const done  = panel.querySelectorAll('.activity-item.done');
-    state.completedDays[day] = items.length > 0 && done.length === items.length;
+    const day=panel.id.replace('day-','');
+    const items=panel.querySelectorAll('.activity-item');
+    const done=panel.querySelectorAll('.activity-item.done');
+    state.completedDays[day]=items.length>0&&done.length===items.length;
   });
-  state.spheres = WEEK_DAYS.filter(d=>state.completedDays[d]===true).length;
-  let s=0; for(const d of WEEK_DAYS){if(state.completedDays[d]===true)s++;else break;}
+  state.spheres=WD.filter(d=>state.completedDays[d]===true).length;
+  let s=0; for(const d of WD){if(state.completedDays[d]===true)s++;else break;}
   state.streak=s;
   saveState();
 }
@@ -850,16 +846,12 @@ checkAchievements();
 
 // ── AUTO DIA ATUAL ──
 (function(){
-  const map = {1:'segunda',2:'terca',3:'quarta',4:'quinta',5:'sexta'};
-  const dow = new Date().getDay(); // 0=dom,1=seg,...,6=sab
-  const dayKey = map[dow] || 'segunda'; // fim de semana → segunda
-  const btn = document.getElementById('tab-' + dayKey);
-  if(btn) showDay(dayKey, btn);
-  else {
-    // fallback: segunda
-    const fb = document.getElementById('tab-segunda');
-    if(fb) showDay('segunda', fb);
-  }
+  const map={1:'segunda',2:'terca',3:'quarta',4:'quinta',5:'sexta'};
+  const dow=new Date().getDay();
+  const dayKey=map[dow]||'segunda';
+  const btn=document.getElementById('tab-'+dayKey);
+  if(btn) showDay(dayKey,btn);
+  else { const fb=document.getElementById('tab-segunda'); if(fb) showDay('segunda',fb); }
 })();
 
 // ── TOGGLE ──
@@ -900,9 +892,6 @@ function updateProgress(day) {
   updateSpheres(prev,state.spheres);
   let streak=0; for(const d of WEEK_DAYS){if(state.completedDays[d]===true)streak++;else break;}
   state.streak=streak;
-  // Semana completa = todos os 5 dias feitos
-  const weekDone = WEEK_DAYS.every(d=>state.completedDays[d]===true);
-  if(weekDone) state.weeksCompleted = Math.max(state.weeksCompleted, 1);
 }
 
 // ── SPHERES ──
@@ -922,11 +911,24 @@ function updateStats(){
   sv.classList.toggle('on',state.streak>0);
   document.getElementById('sphereVal').innerHTML=state.spheres+' <span style="font-size:.85rem;color:rgba(255,255,255,.35)">/7</span>';
 
-  // Rank baseado em pontos acumulados
-  const prevRank=state.rank;
+  // Rank só sobe quando a semana inteira (seg→sex) estiver completa
+  // Enquanto isso, mostra progresso mas mantém rank atual travado
+  const WEEK_DAYS=['segunda','terca','quarta','quinta','sexta'];
+  const semanaCompleta = WEEK_DAYS.every(d=>state.completedDays[d]===true);
+  const prevRank = state.rank;
+
+  // Calcula qual rank os pontos dariam
   let ri=0; RANKS.forEach((r,i)=>{if(state.power>=r.min)ri=i;});
-  state.rank=ri;
-  const r=RANKS[ri],nextR=RANKS[ri+1];
+
+  // Só aplica o novo rank se a semana estiver completa OU se o rank calculado
+  // for menor ou igual ao rank já conquistado (não deixa regredir)
+  if(semanaCompleta || ri <= state.rank) {
+    state.rank = Math.max(state.rank, ri);
+  }
+  // Se semana não completa, rank máximo exibível é o já conquistado
+  const rankExibido = semanaCompleta ? state.rank : Math.min(state.rank, ri);
+
+  const r=RANKS[rankExibido], nextR=RANKS[rankExibido+1];
   const pct=nextR?(state.power-r.min)/(nextR.min-r.min)*100:100;
   const badge=document.getElementById('rankBadge');
   badge.textContent=r.emoji+' '+r.name;
@@ -936,7 +938,7 @@ function updateStats(){
   document.getElementById('rankNext').textContent=nextR?`faltam ${Math.max(0,nextR.min-state.power)} pts para ${nextR.name}`:'🌟 Rank Máximo!';
   document.getElementById('powerFill').style.width=Math.min(100,pct)+'%';
   document.getElementById('powerFill').style.background=`linear-gradient(90deg,${r.color},#FFD700)`;
-  if(ri>prevRank) showRankUp(r);
+  if(rankExibido>prevRank && semanaCompleta) showRankUp(r);
   document.getElementById('achVal').textContent=state.unlockedAch.size;
   const totalExtra=Object.values(state.extraWeeks).flat().filter(Boolean).length;
   document.getElementById('extraVal').textContent=totalExtra;
@@ -1104,4 +1106,4 @@ function genStars(){const c=document.getElementById('stars');for(let i=0;i<100;i
 function genSparks(){const c=document.getElementById('sparks');const cls=['#FFD700','#FF8C00','#7ECFFF','#cc88ff'];for(let i=0;i<16;i++){const s=document.createElement('div');s.className='spark';const cl=cls[i%cls.length];s.style.cssText=`left:${Math.random()*100}%;background:${cl};box-shadow:0 0 5px ${cl};--d:${(Math.random()*8+5).toFixed(1)}s;--x:${(Math.random()*180-90).toFixed(0)}px;animation-delay:${(Math.random()*10).toFixed(1)}s;`;c.appendChild(s);}}
 </script>
 </body>
-          </html>
+                                                                                                                                         </html>
