@@ -1091,7 +1091,11 @@ function genSparks(){const c=document.getElementById('sparks');const cls=['#FFD7
 // ── AUTO DIA ATUAL — roda depois de tudo definido ──
 (function(){
   const map={1:'segunda',2:'terca',3:'quarta',4:'quinta',5:'sexta'};
-  const dow = new Date().getDay();
+  // Usa fuso de Brasília (UTC-3) para pegar o dia correto
+  const now = new Date();
+  const brasilOffset = -3 * 60; // UTC-3 em minutos
+  const brasilTime = new Date(now.getTime() + (brasilOffset - now.getTimezoneOffset()) * 60000);
+  const dow = brasilTime.getDay();
   const dayKey = map[dow] || 'segunda';
   const btn = document.getElementById('tab-'+dayKey);
   if(btn) showDay(dayKey, btn);
@@ -1099,4 +1103,4 @@ function genSparks(){const c=document.getElementById('sparks');const cls=['#FFD7
 })();
 </script>
 </body>
-                                                                                                                                                                     </html>
+</html>
