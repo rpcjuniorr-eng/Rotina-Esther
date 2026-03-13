@@ -1106,4 +1106,4 @@ function genStars(){const c=document.getElementById('stars');for(let i=0;i<100;i
 function genSparks(){const c=document.getElementById('sparks');const cls=['#FFD700','#FF8C00','#7ECFFF','#cc88ff'];for(let i=0;i<16;i++){const s=document.createElement('div');s.className='spark';const cl=cls[i%cls.length];s.style.cssText=`left:${Math.random()*100}%;background:${cl};box-shadow:0 0 5px ${cl};--d:${(Math.random()*8+5).toFixed(1)}s;--x:${(Math.random()*180-90).toFixed(0)}px;animation-delay:${(Math.random()*10).toFixed(1)}s;`;c.appendChild(s);}}
 </script>
 </body>
-  </html>
+</html>
