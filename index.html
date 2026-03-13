@@ -678,7 +678,7 @@ function triggerCelebration(day) {
 }
 
 // ── SAVE/LOAD ──
-const SAVE_KEY = 'rotina_esther_v4';
+const SAVE_KEY = 'rotina_esther_v5';
 
 function saveState() {
   try {
@@ -703,7 +703,7 @@ function saveState() {
 function loadSaved() {
   try {
     // Limpa versões antigas automaticamente
-    ['rotina_esther_v1','rotina_esther_v2','rotina_esther_v3'].forEach(k=>localStorage.removeItem(k));
+    ['rotina_esther_v1','rotina_esther_v2','rotina_esther_v3','rotina_esther_v4'].forEach(k=>localStorage.removeItem(k));
     const raw = localStorage.getItem(SAVE_KEY);
     return raw ? JSON.parse(raw) : null;
   } catch(e) { return null; }
@@ -847,11 +847,13 @@ checkAchievements();
 // ── AUTO DIA ATUAL ──
 (function(){
   const map={1:'segunda',2:'terca',3:'quarta',4:'quinta',5:'sexta'};
-  const dow=new Date().getDay();
-  const dayKey=map[dow]||'segunda';
-  const btn=document.getElementById('tab-'+dayKey);
-  if(btn) showDay(dayKey,btn);
-  else { const fb=document.getElementById('tab-segunda'); if(fb) showDay('segunda',fb); }
+  const dow = new Date().getDay(); // 0=dom,1=seg,2=ter,3=qua,4=qui,5=sex,6=sab
+  const dayKey = map[dow] || 'segunda'; // fim de semana → segunda
+  setTimeout(()=>{
+    const btn = document.getElementById('tab-'+dayKey);
+    if(btn) showDay(dayKey, btn);
+    else showDay('segunda', document.getElementById('tab-segunda'));
+  }, 50);
 })();
 
 // ── TOGGLE ──
@@ -911,8 +913,7 @@ function updateStats(){
   sv.classList.toggle('on',state.streak>0);
   document.getElementById('sphereVal').innerHTML=state.spheres+' <span style="font-size:.85rem;color:rgba(255,255,255,.35)">/7</span>';
 
-  // Rank só sobe quando a semana inteira (seg→sex) estiver completa
-  // Enquanto isso, mostra progresso mas mantém rank atual travado
+  // Rank só sobe quando todos os 5 dias estiverem 100% completos
   const WEEK_DAYS=['segunda','terca','quarta','quinta','sexta'];
   const semanaCompleta = WEEK_DAYS.every(d=>state.completedDays[d]===true);
   const prevRank = state.rank;
@@ -920,13 +921,12 @@ function updateStats(){
   // Calcula qual rank os pontos dariam
   let ri=0; RANKS.forEach((r,i)=>{if(state.power>=r.min)ri=i;});
 
-  // Só aplica o novo rank se a semana estiver completa OU se o rank calculado
-  // for menor ou igual ao rank já conquistado (não deixa regredir)
-  if(semanaCompleta || ri <= state.rank) {
+  // Rank só sobe se semana COMPLETA. Nunca regride.
+  if(semanaCompleta) {
     state.rank = Math.max(state.rank, ri);
   }
-  // Se semana não completa, rank máximo exibível é o já conquistado
-  const rankExibido = semanaCompleta ? state.rank : Math.min(state.rank, ri);
+  // Sempre exibe o rank já conquistado
+  const rankExibido = state.rank;
 
   const r=RANKS[rankExibido], nextR=RANKS[rankExibido+1];
   const pct=nextR?(state.power-r.min)/(nextR.min-r.min)*100:100;
@@ -1090,7 +1090,7 @@ function spawnBurstCenter(){
   }
 }
 function kiBlast(el){
-  if(!el)return;
+  if(!el || !el.classList)return;
   el.style.animation='none';el.textContent='💥';
   el.style.transform='scale(2)';el.style.filter='drop-shadow(0 0 30px gold)';
   setTimeout(()=>{el.textContent='🐉';el.style.transform='';el.style.filter='';el.style.animation='';},500);
@@ -1106,4 +1106,4 @@ function genStars(){const c=document.getElementById('stars');for(let i=0;i<100;i
 function genSparks(){const c=document.getElementById('sparks');const cls=['#FFD700','#FF8C00','#7ECFFF','#cc88ff'];for(let i=0;i<16;i++){const s=document.createElement('div');s.className='spark';const cl=cls[i%cls.length];s.style.cssText=`left:${Math.random()*100}%;background:${cl};box-shadow:0 0 5px ${cl};--d:${(Math.random()*8+5).toFixed(1)}s;--x:${(Math.random()*180-90).toFixed(0)}px;animation-delay:${(Math.random()*10).toFixed(1)}s;`;c.appendChild(s);}}
 </script>
 </body>
-                                                                                                                                         </html>
+  </html>
