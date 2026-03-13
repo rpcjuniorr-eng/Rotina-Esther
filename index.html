@@ -692,6 +692,7 @@ function saveState() {
       schoolDays: state.schoolDays,
       meditations: state.meditations,
       readings: state.readings,
+      weeksCompleted: state.weeksCompleted,
       completedDays: state.completedDays,
       unlockedAch: [...state.unlockedAch],
       extraWeeks: state.extraWeeks,
@@ -757,6 +758,7 @@ const BONUSES = [
 const state = {
   power:0, streak:0, spheres:0, rank:0,
   totalDone:0, baths:0, schoolDays:0, meditations:0, readings:0,
+  weeksCompleted:0,
   completedDays:{}, unlockedAch:new Set(),
   extraWeeks:{water:[],trash:[],closet:[]},
 };
@@ -765,11 +767,23 @@ const state = {
 genStars(); genSparks();
 const saved = loadSaved();
 
-// Carrega APENAS os itens marcados e extras do save — ignora power/rank/spheres salvos
 if (saved) {
-  state.unlockedAch = new Set(saved.unlockedAch || []);
-  state.extraWeeks = saved.extraWeeks || {water:[],trash:[],closet:[]};
+  // Restaura TUDO do save — power, rank, esferas, streak, conquistas, extras, semanas
+  state.power        = saved.power        || 0;
+  state.streak       = saved.streak       || 0;
+  state.spheres      = saved.spheres      || 0;
+  state.rank         = saved.rank         || 0;
+  state.totalDone    = saved.totalDone    || 0;
+  state.baths        = saved.baths        || 0;
+  state.schoolDays   = saved.schoolDays   || 0;
+  state.meditations  = saved.meditations  || 0;
+  state.readings     = saved.readings     || 0;
+  state.weeksCompleted = saved.weeksCompleted || 0;
+  state.completedDays  = saved.completedDays  || {};
+  state.unlockedAch    = new Set(saved.unlockedAch || []);
+  state.extraWeeks     = saved.extraWeeks || {water:[],trash:[],closet:[]};
 }
+
 renderExtras(); renderBiweekly(); renderAchievements();
 
 document.querySelectorAll('.day-panel:not(#day-extras)').forEach(panel => {
@@ -781,39 +795,56 @@ document.querySelectorAll('.day-panel:not(#day-extras)').forEach(panel => {
   panel.querySelectorAll('.activity-item').forEach(it => it.addEventListener('click', ()=>toggle(it,day)));
 
   if (saved && saved.checkedItems) {
+    // Restaura visual de cada item pelo que foi salvo
     panel.querySelectorAll('.activity-item').forEach(it => {
       const key = panel.id + '§' + it.querySelector('.activity-name').textContent.trim();
-      if (saved.checkedItems[key]) it.classList.add('done');
+      if (saved.checkedItems[key] === true) it.classList.add('done');
     });
   } else {
-    // first time defaults — segunda, terca e quarta já concluídas
+    // Primeiro acesso — seg, ter e qua já concluídas
     if (day==='segunda' || day==='terca' || day==='quarta') {
       panel.querySelectorAll('.activity-item').forEach(it=>it.classList.add('done'));
     }
   }
-});
 
-// Recalcula TUDO do zero a partir do DOM — nunca usa power/rank/spheres do localStorage
-recalcStateFromDOM();
-
-// Atualiza completedDays e esferas baseado no DOM
-document.querySelectorAll('.day-panel:not(#day-extras)').forEach(panel => {
-  const day = panel.id.replace('day-','');
+  // Atualiza barra de progresso visual do dia
   const items = panel.querySelectorAll('.activity-item');
   const done  = panel.querySelectorAll('.activity-item.done');
-  state.completedDays[day] = items.length > 0 && done.length === items.length;
   document.getElementById('fill-'+day).style.width = (items.length ? done.length/items.length*100 : 0)+'%';
   document.getElementById('count-'+day).textContent = done.length+'/'+items.length;
-  const msg = document.getElementById('complete-'+day);
-  if(msg) msg.classList.toggle('show', state.completedDays[day]);
+  if(state.completedDays[day]) {
+    const m = document.getElementById('complete-'+day);
+    if(m) m.classList.add('show');
+  }
 });
 
-const WEEK_DAYS=['segunda','terca','quarta','quinta','sexta'];
-state.spheres = WEEK_DAYS.filter(d=>state.completedDays[d]===true).length;
-let _streak=0; for(const d of WEEK_DAYS){if(state.completedDays[d]===true)_streak++;else break;}
-state.streak=_streak;
-updateSpheres(0, state.spheres);
+// Se não há save, recalcula tudo do DOM (primeiro acesso)
+if (!saved) {
+  state.power=0; state.totalDone=0; state.baths=0;
+  state.schoolDays=0; state.meditations=0; state.readings=0;
+  document.querySelectorAll('.day-panel:not(#day-extras) .activity-item.done').forEach(it=>{
+    const pts=parseInt(it.dataset.pts||3);
+    state.power+=pts; state.totalDone++;
+    const n=it.querySelector('.activity-name').textContent;
+    if(n.includes('Banho'))     state.baths++;
+    if(n.includes('Escola'))    state.schoolDays++;
+    if(n.includes('Meditação')) state.meditations++;
+    if(n.includes('Leitura'))   state.readings++;
+  });
+  const WEEK_DAYS=['segunda','terca','quarta','quinta','sexta'];
+  document.querySelectorAll('.day-panel:not(#day-extras)').forEach(panel => {
+    const day = panel.id.replace('day-','');
+    const items = panel.querySelectorAll('.activity-item');
+    const done  = panel.querySelectorAll('.activity-item.done');
+    state.completedDays[day] = items.length > 0 && done.length === items.length;
+  });
+  state.spheres = WEEK_DAYS.filter(d=>state.completedDays[d]===true).length;
+  let s=0; for(const d of WEEK_DAYS){if(state.completedDays[d]===true)s++;else break;}
+  state.streak=s;
+  saveState();
+}
 
+updateSpheres(0, state.spheres);
 updateStats();
 checkAchievements();
 
@@ -830,26 +861,6 @@ checkAchievements();
     if(fb) showDay('segunda', fb);
   }
 })();
-
-function recalcStateFromDOM() {
-  // Zera tudo antes de recalcular para não acumular com valores salvos
-  state.power=0; state.totalDone=0; state.baths=0;
-  state.schoolDays=0; state.meditations=0; state.readings=0;
-  document.querySelectorAll('.day-panel:not(#day-extras) .activity-item.done').forEach(it=>{
-    const pts=parseInt(it.dataset.pts||3);
-    state.power+=pts; state.totalDone++;
-    const n=it.querySelector('.activity-name').textContent;
-    if(n.includes('Banho'))     state.baths++;
-    if(n.includes('Escola'))    state.schoolDays++;
-    if(n.includes('Meditação')) state.meditations++;
-    if(n.includes('Leitura'))   state.readings++;
-  });
-  // Recalcula esferas e streak também
-  const WEEK_DAYS=['segunda','terca','quarta','quinta','sexta'];
-  state.spheres=WEEK_DAYS.filter(d=>state.completedDays[d]===true).length;
-  let streak=0; for(const d of WEEK_DAYS){if(state.completedDays[d]===true)streak++;else break;}
-  state.streak=streak;
-}
 
 // ── TOGGLE ──
 function toggle(el, day) {
@@ -889,6 +900,9 @@ function updateProgress(day) {
   updateSpheres(prev,state.spheres);
   let streak=0; for(const d of WEEK_DAYS){if(state.completedDays[d]===true)streak++;else break;}
   state.streak=streak;
+  // Semana completa = todos os 5 dias feitos
+  const weekDone = WEEK_DAYS.every(d=>state.completedDays[d]===true);
+  if(weekDone) state.weeksCompleted = Math.max(state.weeksCompleted, 1);
 }
 
 // ── SPHERES ──
@@ -907,18 +921,27 @@ function updateStats(){
   sv.innerHTML=state.streak>0?state.streak+' <span class="flame">🔥</span>':'0 <span style="opacity:.3">🔥</span>';
   sv.classList.toggle('on',state.streak>0);
   document.getElementById('sphereVal').innerHTML=state.spheres+' <span style="font-size:.85rem;color:rgba(255,255,255,.35)">/7</span>';
+
+  // Rank baseado em semanas completas (seg+ter+qua+qui+sex todas feitas = 1 semana)
   const prevRank=state.rank;
-  let ri=0; RANKS.forEach((r,i)=>{if(state.power>=r.min)ri=i;});
+  const wc = state.weeksCompleted || 0;
+  let ri=0;
+  if(wc>=4) ri=4;
+  else if(wc>=3) ri=3;
+  else if(wc>=2) ri=2;
+  else if(wc>=1) ri=1;
+  else ri=0;
   state.rank=ri;
   const r=RANKS[ri],nextR=RANKS[ri+1];
-  const pct=nextR?(state.power-r.min)/(nextR.min-r.min)*100:100;
+  // Barra de progresso mostra avanço dentro da semana atual
+  const pct=nextR? Math.min(100,(state.power - (wc*225)) / 225 * 100) : 100;
   const badge=document.getElementById('rankBadge');
   badge.textContent=r.emoji+' '+r.name;
   badge.style.color=r.color; badge.style.borderColor=r.color;
   badge.style.textShadow=`0 0 12px ${r.color}`;
   badge.style.background=`rgba(0,0,0,.25)`;
-  document.getElementById('rankNext').textContent=nextR?`próximo: ${nextR.min} pts`:'🌟 Rank Máximo!';
-  document.getElementById('powerFill').style.width=Math.min(100,pct)+'%';
+  document.getElementById('rankNext').textContent=nextR?`semana ${wc+1} completa = ${nextR.name}`:'🌟 Rank Máximo!';
+  document.getElementById('powerFill').style.width=Math.max(0,Math.min(100,pct))+'%';
   document.getElementById('powerFill').style.background=`linear-gradient(90deg,${r.color},#FFD700)`;
   if(ri>prevRank) showRankUp(r);
   document.getElementById('achVal').textContent=state.unlockedAch.size;
