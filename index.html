@@ -529,12 +529,13 @@ body{background:var(--dark);font-family:'Nunito',sans-serif;min-height:100vh;ove
   <!-- EXTRAS -->
   <div class="day-panel" id="day-extras">
     <div class="extras-header">
-      <div class="extras-title">📅 HISTÓRICO DO MÊS</div>
-      <div class="extras-desc">Registro das semanas concluídas este mês</div>
+      <div class="extras-title">⭐ EXTRAS ⭐</div>
+      <div class="extras-desc">Role para baixo para ver o histórico do mês e iniciar nova semana 📅</div>
     </div>
-    <div id="weekHistoryGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-bottom:20px;"></div>
-    <div style="text-align:center;margin-top:8px;">
-      <button onclick="confirmNewWeek()" style="padding:10px 24px;border-radius:12px;border:2px solid rgba(255,107,0,.5);background:linear-gradient(135deg,rgba(100,20,0,.6),rgba(180,50,0,.4));color:#FF8C00;font-family:'Bangers',cursive;font-size:1rem;letter-spacing:2px;cursor:pointer;">🔄 SALVAR E INICIAR NOVA SEMANA</button>
+    <div style="text-align:center;padding:30px 0;">
+      <div style="font-size:3rem;margin-bottom:12px;">📅</div>
+      <div style="font-family:'Bangers',cursive;font-size:1.2rem;color:var(--gold);letter-spacing:3px;">HISTÓRICO NA TELA PRINCIPAL</div>
+      <div style="color:rgba(255,255,255,.45);font-size:.85rem;margin-top:8px;">Role para baixo, abaixo das conquistas!</div>
     </div>
   </div>
 </div>
@@ -543,6 +544,15 @@ body{background:var(--dark);font-family:'Nunito',sans-serif;min-height:100vh;ove
 <div class="achievements-section">
   <div class="section-title">🏅 CONQUISTAS 🏅</div>
   <div class="achievements-grid" id="achGrid"></div>
+</div>
+
+<!-- HISTÓRICO DO MÊS -->
+<div class="achievements-section" style="padding-top:0;">
+  <div class="section-title">📅 HISTÓRICO DO MÊS 📅</div>
+  <div id="weekHistoryGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-bottom:16px;"></div>
+  <div style="text-align:center;margin-bottom:30px;">
+    <button onclick="confirmNewWeek()" style="padding:11px 28px;border-radius:14px;border:2px solid rgba(255,107,0,.5);background:linear-gradient(135deg,rgba(100,20,0,.6),rgba(180,50,0,.4));color:#FF8C00;font-family:'Bangers',cursive;font-size:1.05rem;letter-spacing:2px;cursor:pointer;box-shadow:0 0 16px rgba(255,107,0,.2);">🔄 SALVAR E INICIAR NOVA SEMANA</button>
+  </div>
 </div>
 
 <!-- MODALS -->
@@ -837,7 +847,14 @@ document.querySelectorAll('.day-panel:not(#day-extras)').forEach(panel => {
 if (!saved) {
   const months = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
   const currentMonth = months[new Date().getMonth()];
-  state.weekHistory = [{week:1, days:5, pts:225, month:currentMonth}];
+  state.weekHistory = [{
+    week: 1,
+    days: 5,
+    pts: 225,
+    month: currentMonth,
+    rank: 1, // Super Saiyajin
+    achievements: ['first','hygiene','school','streak3','streak5','power100','medita3','reads5'],
+  }];
   state.currentWeek = 2;
   state.currentMonth = currentMonth;
   state.power = 0;
@@ -982,12 +999,8 @@ function renderWeekHistory(){
   g.innerHTML = '';
   const months = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
   const currentMonth = months[new Date().getMonth()];
-
-  // Atualiza mês atual se necessário
   if(!state.currentMonth) state.currentMonth = currentMonth;
-
-  // Se virou o mês, zera o histórico
-  if(state.currentMonth !== currentMonth) {
+  if(state.currentMonth !== currentMonth){
     state.weekHistory = [];
     state.currentWeek = 1;
     state.currentMonth = currentMonth;
@@ -1000,24 +1013,35 @@ function renderWeekHistory(){
 
   state.weekHistory.forEach((wk, i) => {
     const allDays = wk.days >= 5;
+    const rankInfo = RANKS[wk.rank||0];
     const card = document.createElement('div');
-    card.style.cssText = `border-radius:16px;padding:16px;background:linear-gradient(135deg,${allDays?'#0a3a1a,#1a6030':'#1a1a0a,#3a3010'});border:2px solid ${allDays?'#00e676':'rgba(255,215,0,.3)'};box-shadow:0 4px 20px ${allDays?'rgba(0,200,80,.2)':'rgba(255,215,0,.1)'};animation:cardAppear .4s ease backwards;`;
+    card.style.cssText = `border-radius:18px;padding:18px;background:linear-gradient(135deg,${allDays?'#0a3a1a,#1a6030':'#1a1a0a,#2a2010'});border:2px solid ${allDays?'#00e676':'rgba(255,215,0,.35)'};box-shadow:0 4px 24px ${allDays?'rgba(0,200,80,.25)':'rgba(255,215,0,.1)'};animation:cardAppear .4s ease backwards;`;
     card.style.animationDelay = (i * 0.1) + 's';
+
+    // conquistas da semana
+    const achIcons = (wk.achievements||[]).map(id=>{
+      const a = ACHIEVEMENTS.find(x=>x.id===id);
+      return a ? `<span title="${a.name}" style="font-size:1.2rem;">${a.icon}</span>` : '';
+    }).join('');
+
     card.innerHTML = `
-      <div style="font-family:'Bangers',cursive;font-size:1.1rem;color:${allDays?'#00e676':'var(--gold)'};letter-spacing:2px;margin-bottom:8px;">
+      <div style="font-family:'Bangers',cursive;font-size:1.15rem;color:${allDays?'#00e676':'var(--gold)'};letter-spacing:2px;margin-bottom:10px;">
         ${allDays?'🏆':'📅'} SEMANA ${wk.week} — ${wk.month}
       </div>
-      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:8px 0;">
+      <div style="display:flex;gap:16px;justify-content:center;margin:8px 0;">
         <div style="text-align:center;">
-          <div style="font-family:'Bangers',cursive;font-size:1.8rem;color:var(--gold);">${wk.pts}</div>
-          <div style="font-size:.7rem;color:rgba(255,255,255,.45);">pontos</div>
+          <div style="font-family:'Bangers',cursive;font-size:2rem;color:var(--gold);line-height:1;">${wk.pts}</div>
+          <div style="font-size:.68rem;color:rgba(255,255,255,.4);letter-spacing:1px;">PONTOS</div>
         </div>
         <div style="text-align:center;">
-          <div style="font-family:'Bangers',cursive;font-size:1.8rem;color:${allDays?'#00e676':'#FF8C00'};">${wk.days}/5</div>
-          <div style="font-size:.7rem;color:rgba(255,255,255,.45);">dias completos</div>
+          <div style="font-family:'Bangers',cursive;font-size:2rem;color:${allDays?'#00e676':'#FF8C00'};line-height:1;">${wk.days}/5</div>
+          <div style="font-size:.68rem;color:rgba(255,255,255,.4);letter-spacing:1px;">DIAS</div>
         </div>
       </div>
-      <div style="font-size:.75rem;color:rgba(255,255,255,.4);margin-top:4px;">${allDays?'✅ Semana perfeita!':'⚡ '+wk.days+' de 5 dias'}</div>
+      <div style="text-align:center;margin:8px 0;padding:6px 10px;border-radius:10px;background:rgba(0,0,0,.3);border:1px solid ${rankInfo.color}33;">
+        <span style="font-family:'Bangers',cursive;font-size:1rem;color:${rankInfo.color};letter-spacing:2px;">${rankInfo.emoji} ${rankInfo.name}</span>
+      </div>
+      ${achIcons ? `<div style="text-align:center;margin-top:8px;display:flex;gap:4px;justify-content:center;flex-wrap:wrap;">${achIcons}</div>` : ''}
     `;
     g.appendChild(card);
   });
@@ -1031,12 +1055,14 @@ function confirmNewWeek(){
 
   if(!confirm(`Salvar semana ${state.currentWeek}?\n\n📅 Dias completos: ${daysCompleted}/5\n⚡ Pontos: ${state.power}\n\nIsso vai zerar os dias da semana atual.`)) return;
 
-  // Salva no histórico
+  // Salva no histórico com rank e conquistas
   state.weekHistory.push({
     week: state.currentWeek,
     days: daysCompleted,
     pts: state.power,
     month: currentMonth,
+    rank: state.rank,
+    achievements: [...state.unlockedAch],
   });
   // Máx 4 semanas por mês
   if(state.weekHistory.length > 4) state.weekHistory = state.weekHistory.slice(-4);
@@ -1159,4 +1185,4 @@ function genSparks(){const c=document.getElementById('sparks');const cls=['#FFD7
 })();
 </script>
 </body>
-                                                                                                                                                                                                       </html>
+  </html>
