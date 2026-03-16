@@ -573,14 +573,14 @@ body{background:var(--dark);font-family:'Nunito',sans-serif;min-height:100vh;ove
   </div>
 </div>
 <div class="modal-overlay" id="rankModal" style="background:rgba(0,0,0,.97);z-index:2000;padding:0;overflow:hidden;">
-  <div style="position:relative;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;">
+  <div style="position:relative;width:100%;height:100%;">
     <button class="modal-close" onclick="closeRankModal()" style="position:fixed;top:18px;right:18px;z-index:20;font-size:1.5rem;">✕</button>
 
     <!-- Canvas só para efeitos (aura, esferas, partículas) -->
     <canvas id="rankCanvas" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;"></canvas>
 
     <!-- Personagem SVG anime feminina -->
-    <div id="ruCharWrap" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-58%);z-index:3;width:220px;filter:drop-shadow(0 0 0px rgba(255,215,0,0));">
+    <div id="ruCharWrap" style="position:absolute;top:44%;left:50%;transform:translate(-50%,-50%);z-index:3;width:220px;filter:drop-shadow(0 0 0px rgba(255,215,0,0));">
       <svg viewBox="0 0 200 320" xmlns="http://www.w3.org/2000/svg" width="220" height="352">
         <defs>
           <radialGradient id="skinG" cx="40%" cy="35%"><stop offset="0%" stop-color="#fde8c8"/><stop offset="100%" stop-color="#f0b882"/></radialGradient>
@@ -748,11 +748,11 @@ body{background:var(--dark);font-family:'Nunito',sans-serif;min-height:100vh;ove
     </div>
 
     <!-- Texto bottom -->
-    <div style="position:fixed;bottom:0;left:0;right:0;z-index:5;text-align:center;padding:16px 20px 38px;background:linear-gradient(transparent,rgba(0,0,0,.92) 25%,rgba(0,0,0,.98));">
-      <div id="ruLabel" style="font-family:'Bangers',cursive;font-size:.85rem;letter-spacing:5px;color:rgba(255,255,255,.5);opacity:0;transition:opacity .6s;margin-bottom:2px;">TRANSFORMAÇÃO COMPLETA</div>
-      <div id="ruRankName" style="font-family:'Bangers',cursive;font-size:2.8rem;letter-spacing:5px;line-height:1.1;margin:4px auto;opacity:0;transition:opacity .6s,text-shadow .6s;display:block;width:100%;">RANK UP!</div>
-      <div id="ruRankDesc" style="font-size:.85rem;color:rgba(255,255,255,.55);font-weight:700;margin:6px auto 14px;opacity:0;transition:opacity .5s;">Parabéns!</div>
-      <button id="ruBtn" class="modal-btn" onclick="closeRankModal()" style="opacity:0;transition:opacity .5s;background:linear-gradient(135deg,#aa6600,#FFD700);color:#000;font-size:1rem;letter-spacing:3px;display:block;margin:0 auto;">⚡ INCRÍVEL! ⚡</button>
+    <div style="position:fixed;bottom:0;left:0;right:0;z-index:10;text-align:center;padding:14px 20px 36px;background:linear-gradient(transparent,rgba(0,0,0,.93) 20%,rgba(0,0,0,.99));box-sizing:border-box;">
+      <div id="ruLabel" style="font-family:'Bangers',cursive;font-size:.82rem;letter-spacing:5px;color:rgba(255,255,255,.5);opacity:0;transition:opacity .6s;">TRANSFORMAÇÃO COMPLETA</div>
+      <div id="ruRankName" style="font-family:'Bangers',cursive;font-size:2.8rem;letter-spacing:4px;line-height:1.1;margin:4px 0;opacity:0;transition:opacity .6s,text-shadow .6s;">RANK UP!</div>
+      <div id="ruRankDesc" style="font-size:.84rem;color:rgba(255,255,255,.55);font-weight:700;margin:4px 0 12px;opacity:0;transition:opacity .5s;"></div>
+      <button id="ruBtn" class="modal-btn" onclick="closeRankModal()" style="opacity:0;transition:opacity .5s;background:linear-gradient(135deg,#aa6600,#FFD700);color:#000;font-size:1rem;letter-spacing:3px;">⚡ INCRÍVEL! ⚡</button>
     </div>
   </div>
 </div>
@@ -1002,6 +1002,9 @@ if (saved) {
   state.weekHistory   = saved.weekHistory || [];
   state.currentWeek   = saved.currentWeek || 1;
   state.currentMonth  = saved.currentMonth || '';
+  // Recalcula rank silenciosamente dos pontos (evita re-disparar modal)
+  let _ri=0; RANKS.forEach((r,i)=>{if(state.power>=r.min)_ri=i;});
+  state.rank = Math.max(state.rank, _ri);
 }
 
 renderWeekHistory(); renderAchievements();
