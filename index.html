@@ -68,6 +68,11 @@ body{background:var(--dark);font-family:'Nunito',sans-serif;min-height:100vh;ove
 .stat-label{font-family:'Bangers',cursive;font-size:.78rem;letter-spacing:2px;color:rgba(255,255,255,.45);margin-bottom:3px;}
 .stat-value{font-family:'Bangers',cursive;font-size:1.9rem;color:var(--gold);text-shadow:0 0 14px rgba(255,215,0,.5);}
 .stat-sub{font-size:.68rem;color:rgba(255,255,255,.35);margin-top:2px;}
+@keyframes auraPulse{from{opacity:.5;transform:translateX(-50%) scale(.9)}to{opacity:1;transform:translateX(-50%) scale(1.15)}}
+@keyframes hairGrow{0%{opacity:0;transform:scaleY(0) translateY(20px)}60%{opacity:1;transform:scaleY(1.15) translateY(-5px)}100%{opacity:1;transform:scaleY(1) translateY(0)}}
+@keyframes eyeFlash{0%,100%{opacity:1}50%{opacity:0}}
+@keyframes rankTextIn{from{opacity:0;transform:scale(.3) rotate(-5deg)}to{opacity:1;transform:scale(1) rotate(0)}}
+@keyframes boltFlash2{0%,100%{opacity:0}50%{opacity:1}}
 .wdot{font-size:1.1rem;transition:all .3s;color:rgba(255,255,255,.2);}
 .wdot.done{color:#FFD700;text-shadow:0 0 8px #FFD700;}
 .flame{display:inline-block;animation:flameWig .4s ease-in-out infinite alternate;}
@@ -567,13 +572,105 @@ body{background:var(--dark);font-family:'Nunito',sans-serif;min-height:100vh;ove
     <br><button class="modal-btn" onclick="grantWish()">✨ CONCEDER DESEJO ✨</button>
   </div>
 </div>
-<div class="modal-overlay" id="rankModal">
-  <div class="modal rankup-modal">
-    <button class="modal-close" onclick="closeModal('rankModal')">✕</button>
-    <span class="modal-dragon" id="rankEmoji">💥</span>
-    <div class="modal-title" id="rankTitle" style="color:#FF6B00;">RANK UP!</div>
-    <div class="modal-subtitle" id="rankDesc"></div>
-    <button class="modal-btn" onclick="closeModal('rankModal')">🔥 CONTINUAR 🔥</button>
+<div class="modal-overlay" id="rankModal" style="background:rgba(0,0,0,.95);z-index:2000;">
+  <div id="rankUpScene" style="position:relative;width:100%;max-width:420px;text-align:center;padding:20px;">
+    <button class="modal-close" onclick="closeModal('rankModal')" style="position:absolute;top:0;right:10px;z-index:10;">✕</button>
+
+    <!-- Aura -->
+    <div id="ruAura" style="position:absolute;left:50%;top:160px;transform:translateX(-50%);width:220px;height:220px;border-radius:50%;background:radial-gradient(ellipse,rgba(255,215,0,.35) 0%,transparent 70%);animation:auraPulse 1s ease-in-out infinite alternate;pointer-events:none;"></div>
+
+    <!-- Canvas para esferas orbitando -->
+    <canvas id="rankCanvas" width="360" height="360" style="position:absolute;left:50%;top:20px;transform:translateX(-50%);pointer-events:none;z-index:1;"></canvas>
+
+    <!-- Personagem SVG -->
+    <svg id="ruChar" viewBox="0 0 120 200" width="140" height="210" style="position:relative;z-index:2;margin-top:40px;filter:drop-shadow(0 0 20px rgba(255,215,0,.8));">
+      <!-- Corpo -->
+      <ellipse cx="60" cy="155" rx="22" ry="30" fill="#e8a87c"/>
+      <!-- Roupa - top -->
+      <path d="M38 135 Q60 120 82 135 L85 170 Q60 180 35 170 Z" fill="#cc3300"/>
+      <!-- Braços -->
+      <ellipse cx="28" cy="148" rx="10" ry="22" fill="#e8a87c" transform="rotate(-10,28,148)"/>
+      <ellipse cx="92" cy="148" rx="10" ry="22" fill="#e8a87c" transform="rotate(10,92,148)"/>
+      <!-- Mãos -->
+      <circle cx="22" cy="168" r="8" fill="#e8a87c"/>
+      <circle cx="98" cy="168" r="8" fill="#e8a87c"/>
+      <!-- Pernas -->
+      <rect x="42" y="178" width="16" height="30" rx="7" fill="#cc3300"/>
+      <rect x="62" y="178" width="16" height="30" rx="7" fill="#cc3300"/>
+      <!-- Sapatos -->
+      <ellipse cx="50" cy="208" rx="10" ry="5" fill="#222"/>
+      <ellipse cx="70" cy="208" rx="10" ry="5" fill="#222"/>
+      <!-- Pescoço -->
+      <rect x="53" y="118" width="14" height="18" rx="5" fill="#e8a87c"/>
+      <!-- Cabeça -->
+      <ellipse cx="60" cy="100" rx="28" ry="30" fill="#e8a87c"/>
+      <!-- Orelhas -->
+      <ellipse cx="32" cy="102" rx="6" ry="9" fill="#e8a87c"/>
+      <ellipse cx="88" cy="102" rx="6" ry="9" fill="#e8a87c"/>
+      <!-- Olhos normais -->
+      <g id="ruEyesNormal">
+        <ellipse cx="48" cy="97" rx="6" ry="7" fill="#fff"/>
+        <ellipse cx="72" cy="97" rx="6" ry="7" fill="#fff"/>
+        <circle cx="49" cy="98" r="4" fill="#3a1a00"/>
+        <circle cx="73" cy="98" r="4" fill="#3a1a00"/>
+        <circle cx="50" cy="96" r="1.5" fill="#fff"/>
+        <circle cx="74" cy="96" r="1.5" fill="#fff"/>
+      </g>
+      <!-- Olhos SSJ (verdes, escondidos inicialmente) -->
+      <g id="ruEyesSSJ" opacity="0">
+        <ellipse cx="48" cy="97" rx="6" ry="7" fill="#fff"/>
+        <ellipse cx="72" cy="97" rx="6" ry="7" fill="#fff"/>
+        <circle cx="49" cy="98" r="4" fill="#00cc44"/>
+        <circle cx="73" cy="98" r="4" fill="#00cc44"/>
+        <circle cx="50" cy="96" r="1.5" fill="#fff"/>
+        <circle cx="74" cy="96" r="1.5" fill="#fff"/>
+        <!-- brilho verde -->
+        <ellipse cx="48" cy="97" rx="7" ry="8" fill="none" stroke="#00ff66" stroke-width="1.5" opacity=".6"/>
+        <ellipse cx="72" cy="97" rx="7" ry="8" fill="none" stroke="#00ff66" stroke-width="1.5" opacity=".6"/>
+      </g>
+      <!-- Sobrancelhas -->
+      <path d="M42 88 Q48 84 54 88" stroke="#3a1a00" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <path d="M66 88 Q72 84 78 88" stroke="#3a1a00" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <!-- Nariz -->
+      <ellipse cx="60" cy="106" rx="3" ry="2" fill="#d4896a"/>
+      <!-- Boca sorrindo -->
+      <path d="M50 114 Q60 121 70 114" stroke="#c0714a" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <!-- Cabelo normal (preto) -->
+      <g id="ruHairNormal">
+        <ellipse cx="60" cy="76" rx="28" ry="16" fill="#1a0a00"/>
+        <path d="M32 88 Q28 70 38 58 Q50 48 60 50 Q70 48 82 58 Q92 70 88 88" fill="#1a0a00"/>
+        <path d="M36 95 Q28 80 30 65 Q32 55 38 58" fill="#1a0a00"/>
+        <path d="M84 95 Q92 80 90 65 Q88 55 82 58" fill="#1a0a00"/>
+        <!-- franja -->
+        <path d="M38 72 Q45 60 55 65 Q50 75 42 78 Z" fill="#1a0a00"/>
+        <path d="M82 72 Q75 60 65 65 Q70 75 78 78 Z" fill="#1a0a00"/>
+        <path d="M55 65 Q60 55 65 65 Q62 72 58 72 Z" fill="#1a0a00"/>
+      </g>
+      <!-- Cabelo SSJ (dourado, escondido) -->
+      <g id="ruHairSSJ" opacity="0">
+        <ellipse cx="60" cy="70" rx="28" ry="14" fill="#FFD700"/>
+        <path d="M32 88 Q25 60 38 42 Q50 30 60 32 Q70 30 82 42 Q95 60 88 88" fill="#FFD700"/>
+        <!-- Picos do cabelo SSJ -->
+        <path d="M45 42 Q40 18 50 8 Q55 25 48 42 Z" fill="#FFD700"/>
+        <path d="M60 38 Q60 12 65 2 Q68 18 62 38 Z" fill="#FFD700"/>
+        <path d="M72 42 Q80 18 72 8 Q68 25 70 42 Z" fill="#FFD700"/>
+        <path d="M35 58 Q20 40 28 28 Q36 45 40 58 Z" fill="#FFD700"/>
+        <path d="M85 58 Q100 40 92 28 Q84 45 80 58 Z" fill="#FFD700"/>
+        <!-- brilho no cabelo -->
+        <path d="M48 50 Q52 35 56 50" stroke="#FFFF88" stroke-width="2" fill="none" opacity=".7"/>
+      </g>
+    </svg>
+
+    <!-- Raios de ki -->
+    <div id="ruLightning" style="position:absolute;inset:0;pointer-events:none;opacity:0;z-index:3;"></div>
+
+    <!-- Texto -->
+    <div style="position:relative;z-index:5;margin-top:10px;">
+      <div style="font-family:'Bangers',cursive;font-size:1.1rem;letter-spacing:4px;color:rgba(255,255,255,.6);margin-bottom:4px;">TRANSFORMAÇÃO!</div>
+      <div id="ruRankName" style="font-family:'Bangers',cursive;font-size:2.8rem;color:#FFD700;letter-spacing:6px;text-shadow:0 0 30px #FFD700,0 0 60px #FF8C00;line-height:1;">RANK UP!</div>
+      <div id="ruRankDesc" style="color:rgba(255,255,255,.7);font-size:.95rem;margin:8px 0 16px;font-weight:700;"></div>
+      <button class="modal-btn" onclick="closeModal('rankModal')" style="background:linear-gradient(135deg,#cc8800,#FFD700);color:#000;font-size:1.1rem;">⚡ INCRÍVEL! ⚡</button>
+    </div>
   </div>
 </div>
 <div class="modal-overlay" id="achModal">
@@ -834,10 +931,12 @@ document.querySelectorAll('.day-panel:not(#day-extras)').forEach(panel => {
     });
   }
 
-  const items = panel.querySelectorAll('.activity-item');
-  const done  = panel.querySelectorAll('.activity-item.done');
+  const items = panel.querySelectorAll('.activity-item:not([data-extra="true"])');
+  const done  = panel.querySelectorAll('.activity-item:not([data-extra="true"]).done');
   document.getElementById('fill-'+day).style.width = (items.length ? done.length/items.length*100 : 0)+'%';
   document.getElementById('count-'+day).textContent = done.length+'/'+items.length;
+  // Recalcula completedDays do DOM (garante que os dots ficam corretos)
+  state.completedDays[day] = items.length > 0 && done.length === items.length;
   if(state.completedDays[day]) {
     const m = document.getElementById('complete-'+day);
     if(m) m.classList.add('show');
@@ -963,10 +1062,121 @@ function updateStats(){
 }
 
 function showRankUp(r){
-  document.getElementById('rankEmoji').textContent=r.emoji;
-  document.getElementById('rankTitle').style.color=r.color;
-  document.getElementById('rankDesc').textContent='Você se tornou '+r.name+'! '+r.emoji;
-  openModal('rankModal'); kiBlast(document.querySelector('.character-badge'));
+  document.getElementById('ruRankName').textContent = r.emoji+' '+r.name.toUpperCase();
+  document.getElementById('ruRankName').style.color = r.color;
+  document.getElementById('ruRankName').style.textShadow = `0 0 30px ${r.color},0 0 60px ${r.color}`;
+  document.getElementById('ruRankDesc').textContent = 'Você se tornou '+r.name+'!';
+  document.getElementById('ruAura').style.background = `radial-gradient(ellipse,${r.color}55 0%,transparent 70%)`;
+
+  // Reset estado da personagem
+  const hairN = document.getElementById('ruHairNormal');
+  const hairS = document.getElementById('ruHairSSJ');
+  const eyesN = document.getElementById('ruEyesNormal');
+  const eyesS = document.getElementById('ruEyesSSJ');
+  const lightning = document.getElementById('ruLightning');
+  hairN.style.opacity='1'; hairS.style.opacity='0';
+  eyesN.style.opacity='1'; eyesS.style.opacity='0';
+  lightning.style.opacity='0'; lightning.innerHTML='';
+
+  openModal('rankModal');
+
+  // Canvas — esferas orbitando
+  const canvas = document.getElementById('rankCanvas');
+  const ctx = canvas.getContext('2d');
+  let angle = 0;
+  let animRunning = true;
+  const balls = [1,2,3,4,5,6,7].map((n,i)=>({n, a: (i/7)*Math.PI*2, r:130, exploded:false, ex:0, ey:0, vx:0, vy:0}));
+
+  function drawBallCanvas(ctx,x,y,r,n){
+    const grd=ctx.createRadialGradient(x-r*.3,y-r*.3,r*.05,x,y,r);
+    grd.addColorStop(0,'#FFE066'); grd.addColorStop(.6,'#FF8C00'); grd.addColorStop(1,'#CC4400');
+    ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2);
+    ctx.fillStyle=grd; ctx.shadowColor='#FFD700'; ctx.shadowBlur=12; ctx.fill();
+    ctx.shadowBlur=0;
+    ctx.fillStyle='#CC2200'; ctx.font=`bold ${r*.6}px sans-serif`;
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText(n,x,y+1);
+  }
+
+  let phase = 'orbit'; // orbit → transform → explode
+  let phaseTimer = 0;
+
+  function animRankUp(){
+    if(!animRunning) return;
+    ctx.clearRect(0,0,360,360);
+    phaseTimer++;
+    const cx=180, cy=200;
+
+    if(phase==='orbit'){
+      angle += 0.04;
+      balls.forEach(b=>{
+        const x = cx + Math.cos(b.a+angle)*b.r;
+        const y = cy + Math.sin(b.a+angle)*b.r*.4;
+        drawBallCanvas(ctx,x,y,12,b.n);
+      });
+      if(phaseTimer===50){
+        phase='transform'; phaseTimer=0;
+        // Transforma personagem
+        setTimeout(()=>{
+          hairN.style.transition='opacity .3s'; hairN.style.opacity='0';
+          // Flash branco
+          lightning.style.opacity='1';
+          for(let i=0;i<8;i++){
+            const bolt=document.createElement('div');
+            const a=(i/8)*360;
+            bolt.style.cssText=`position:absolute;width:3px;height:${40+Math.random()*40}px;background:linear-gradient(${a}deg,#fff,transparent);left:50%;top:50%;transform:rotate(${a}deg) translateY(-60px);animation:boltFlash2 .2s ease ${Math.random()*.3}s 3;border-radius:2px;`;
+            lightning.appendChild(bolt);
+          }
+          setTimeout(()=>{
+            hairS.style.transition='opacity .4s'; hairS.style.opacity='1';
+            hairS.style.animation='hairGrow .5s ease';
+            eyesN.style.opacity='0'; eyesS.style.opacity='1';
+            lightning.style.opacity='0';
+          },300);
+        },200);
+      }
+    }
+
+    if(phase==='transform'){
+      angle += 0.04;
+      // Esferas se aproximam do centro
+      balls.forEach(b=>{
+        b.r = Math.max(40, b.r - 1.2);
+        const x = cx + Math.cos(b.a+angle)*b.r;
+        const y = cy + Math.sin(b.a+angle)*b.r*.4;
+        drawBallCanvas(ctx,x,y,12,b.n);
+      });
+      if(phaseTimer===60){
+        phase='explode'; phaseTimer=0;
+        balls.forEach(b=>{
+          const x = cx + Math.cos(b.a+angle)*b.r;
+          const y = cy + Math.sin(b.a+angle)*b.r*.4;
+          b.ex=x; b.ey=y;
+          b.vx=(Math.random()-.5)*18;
+          b.vy=(Math.random()-.5)*18-8;
+          b.exploded=true;
+        });
+      }
+    }
+
+    if(phase==='explode'){
+      // Aura pulsa com cor do rank
+      ctx.beginPath();
+      ctx.arc(cx,cy,60+Math.sin(phaseTimer*.15)*15,0,Math.PI*2);
+      ctx.fillStyle=r.color+'33'; ctx.fill();
+      // Esferas voam para fora
+      balls.forEach(b=>{
+        b.vy+=0.4; b.ex+=b.vx; b.ey+=b.vy;
+        b.vx*=0.97;
+        if(b.ey<360) drawBallCanvas(ctx,b.ex,b.ey,10,b.n);
+      });
+      if(phaseTimer>80) animRunning=false;
+    }
+
+    requestAnimationFrame(animRankUp);
+  }
+  animRankUp();
+  kiBlast(document.querySelector('.character-badge'));
 }
 
 // ── ACHIEVEMENTS ──
@@ -1192,4 +1402,4 @@ function genSparks(){const c=document.getElementById('sparks');const cls=['#FFD7
 })();
 </script>
 </body>
-                                                  </html>
+</html>
