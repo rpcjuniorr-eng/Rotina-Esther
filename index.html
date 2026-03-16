@@ -282,10 +282,13 @@ body{background:var(--dark);font-family:'Nunito',sans-serif;min-height:100vh;ove
 <div class="stats-bar">
   <div class="stat-card" style="min-width:170px;max-width:220px;">
     <div class="stat-label">⚡ PODER</div>
-    <div class="stat-value" id="powerVal">0</div>
+    <div style="display:flex;align-items:baseline;justify-content:center;gap:6px;">
+      <div class="stat-value" id="powerVal">0</div>
+      <div style="font-family:'Bangers',cursive;font-size:1rem;color:rgba(255,215,0,.5);">+<span id="powerExtra">0</span>⭐</div>
+    </div>
     <div id="rankBadge">⚔️ Guerreira</div>
     <div class="power-track"><div class="power-fill" id="powerFill" style="width:0%"></div></div>
-    <div class="stat-sub" id="rankNext">próximo: 160 pts</div>
+    <div class="stat-sub" id="rankNext">próximo: 200 pts</div>
   </div>
   <div class="stat-card">
     <div class="stat-label">🔥 STREAK</div>
@@ -352,9 +355,9 @@ body{background:var(--dark);font-family:'Nunito',sans-serif;min-height:100vh;ove
         <div class="activity-item" data-pts="3"><span class="activity-emoji">😴</span><span class="activity-name">Dormir</span><span class="activity-pts">+3⚡</span><div class="activity-check"></div></div>
       </div></div>
       <div class="activity-card card-extra" style="animation-delay:.3s"><div class="card-glow"></div><div class="card-time">Qualquer hora <span class="flex-badge">flexível</span></div><div class="card-activities">
-        <div class="activity-item" data-pts="4"><span class="activity-emoji">💧</span><span class="activity-name">Encher as garrafas de água</span><span class="activity-pts">+4⚡</span><div class="activity-check"></div></div>
-        <div class="activity-item" data-pts="4"><span class="activity-emoji">🗑️</span><span class="activity-name">Jogar o lixo</span><span class="activity-pts">+4⚡</span><div class="activity-check"></div></div>
-        <div class="activity-item" data-pts="6"><span class="activity-emoji">👗</span><span class="activity-name">Organizar guarda-roupa</span><span class="activity-pts">+6⚡</span><div class="activity-check"></div></div>
+        <div class="activity-item" data-pts="4" data-extra="true"><span class="activity-emoji">💧</span><span class="activity-name">Encher as garrafas de água</span><span class="activity-pts">+4⚡</span><div class="activity-check"></div></div>
+        <div class="activity-item" data-pts="4" data-extra="true"><span class="activity-emoji">🗑️</span><span class="activity-name">Jogar o lixo</span><span class="activity-pts">+4⚡</span><div class="activity-check"></div></div>
+        <div class="activity-item" data-pts="6" data-extra="true"><span class="activity-emoji">👗</span><span class="activity-name">Organizar guarda-roupa</span><span class="activity-pts">+6⚡</span><div class="activity-check"></div></div>
       </div></div>
     </div>
   </div>
@@ -403,8 +406,8 @@ body{background:var(--dark);font-family:'Nunito',sans-serif;min-height:100vh;ove
         <div class="activity-item" data-pts="3"><span class="activity-emoji">😴</span><span class="activity-name">Dormir</span><span class="activity-pts">+3⚡</span><div class="activity-check"></div></div>
       </div></div>
       <div class="activity-card card-extra" style="animation-delay:.55s"><div class="card-glow"></div><div class="card-time">Qualquer hora <span class="flex-badge">flexível</span></div><div class="card-activities">
-        <div class="activity-item" data-pts="4"><span class="activity-emoji">💧</span><span class="activity-name">Encher as garrafas de água</span><span class="activity-pts">+4⚡</span><div class="activity-check"></div></div>
-        <div class="activity-item" data-pts="4"><span class="activity-emoji">🗑️</span><span class="activity-name">Jogar o lixo</span><span class="activity-pts">+4⚡</span><div class="activity-check"></div></div>
+        <div class="activity-item" data-pts="4" data-extra="true"><span class="activity-emoji">💧</span><span class="activity-name">Encher as garrafas de água</span><span class="activity-pts">+4⚡</span><div class="activity-check"></div></div>
+        <div class="activity-item" data-pts="4" data-extra="true"><span class="activity-emoji">🗑️</span><span class="activity-name">Jogar o lixo</span><span class="activity-pts">+4⚡</span><div class="activity-check"></div></div>
       </div></div>
     </div>
   </div>
@@ -443,8 +446,8 @@ body{background:var(--dark);font-family:'Nunito',sans-serif;min-height:100vh;ove
         <div class="activity-item" data-pts="3"><span class="activity-emoji">😴</span><span class="activity-name">Dormir</span><span class="activity-pts">+3⚡</span><div class="activity-check"></div></div>
       </div></div>
       <div class="activity-card card-extra" style="animation-delay:.4s"><div class="card-glow"></div><div class="card-time">Qualquer hora <span class="flex-badge">flexível</span></div><div class="card-activities">
-        <div class="activity-item" data-pts="4"><span class="activity-emoji">💧</span><span class="activity-name">Encher as garrafas de água</span><span class="activity-pts">+4⚡</span><div class="activity-check"></div></div>
-        <div class="activity-item" data-pts="4"><span class="activity-emoji">🗑️</span><span class="activity-name">Jogar o lixo</span><span class="activity-pts">+4⚡</span><div class="activity-check"></div></div>
+        <div class="activity-item" data-pts="4" data-extra="true"><span class="activity-emoji">💧</span><span class="activity-name">Encher as garrafas de água</span><span class="activity-pts">+4⚡</span><div class="activity-check"></div></div>
+        <div class="activity-item" data-pts="4" data-extra="true"><span class="activity-emoji">🗑️</span><span class="activity-name">Jogar o lixo</span><span class="activity-pts">+4⚡</span><div class="activity-check"></div></div>
       </div></div>
     </div>
   </div>
@@ -495,8 +498,8 @@ body{background:var(--dark);font-family:'Nunito',sans-serif;min-height:100vh;ove
         <div class="activity-item" data-pts="3"><span class="activity-emoji">😴</span><span class="activity-name">Dormir</span><span class="activity-pts">+3⚡</span><div class="activity-check"></div></div>
       </div></div>
       <div class="activity-card card-extra" style="animation-delay:.55s"><div class="card-glow"></div><div class="card-time">Qualquer hora <span class="flex-badge">flexível</span></div><div class="card-activities">
-        <div class="activity-item" data-pts="4"><span class="activity-emoji">💧</span><span class="activity-name">Encher as garrafas de água</span><span class="activity-pts">+4⚡</span><div class="activity-check"></div></div>
-        <div class="activity-item" data-pts="4"><span class="activity-emoji">🗑️</span><span class="activity-name">Jogar o lixo</span><span class="activity-pts">+4⚡</span><div class="activity-check"></div></div>
+        <div class="activity-item" data-pts="4" data-extra="true"><span class="activity-emoji">💧</span><span class="activity-name">Encher as garrafas de água</span><span class="activity-pts">+4⚡</span><div class="activity-check"></div></div>
+        <div class="activity-item" data-pts="4" data-extra="true"><span class="activity-emoji">🗑️</span><span class="activity-name">Jogar o lixo</span><span class="activity-pts">+4⚡</span><div class="activity-check"></div></div>
       </div></div>
     </div>
   </div>
@@ -519,8 +522,8 @@ body{background:var(--dark);font-family:'Nunito',sans-serif;min-height:100vh;ove
         <div class="activity-item" data-pts="5"><span class="activity-emoji">📖</span><span class="activity-name">Leitura (5–10 páginas)</span><span class="activity-pts">+5⚡</span><div class="activity-check"></div></div>
       </div></div>
       <div class="activity-card card-extra" style="animation-delay:.2s"><div class="card-glow"></div><div class="card-time">Qualquer hora <span class="flex-badge">flexível</span></div><div class="card-activities">
-        <div class="activity-item" data-pts="4"><span class="activity-emoji">💧</span><span class="activity-name">Encher as garrafas de água</span><span class="activity-pts">+4⚡</span><div class="activity-check"></div></div>
-        <div class="activity-item" data-pts="4"><span class="activity-emoji">🗑️</span><span class="activity-name">Jogar o lixo</span><span class="activity-pts">+4⚡</span><div class="activity-check"></div></div>
+        <div class="activity-item" data-pts="4" data-extra="true"><span class="activity-emoji">💧</span><span class="activity-name">Encher as garrafas de água</span><span class="activity-pts">+4⚡</span><div class="activity-check"></div></div>
+        <div class="activity-item" data-pts="4" data-extra="true"><span class="activity-emoji">🗑️</span><span class="activity-name">Jogar o lixo</span><span class="activity-pts">+4⚡</span><div class="activity-check"></div></div>
       </div></div>
     </div>
     <div style="text-align:center;margin-top:20px;">
@@ -711,6 +714,7 @@ function saveState() {
   try {
     localStorage.setItem(SAVE_KEY, JSON.stringify({
       power: state.power,
+      powerExtra: state.powerExtra,
       streak: state.streak,
       spheres: state.spheres,
       rank: state.rank,
@@ -785,12 +789,10 @@ const BONUSES = [
 
 // ── STATE ──
 const state = {
-  power:0, streak:0, spheres:0, rank:0,
+  power:0, powerExtra:0, streak:0, spheres:0, rank:0,
   totalDone:0, baths:0, schoolDays:0, meditations:0, readings:0,
   completedDays:{}, unlockedAch:new Set(),
-  weekHistory:[], // [{week:1, days:5, pts:225, month:'Mar'}, ...]
-  currentWeek:1,
-  currentMonth:'',
+  weekHistory:[], currentWeek:1, currentMonth:'',
 };
 
 // ── INIT ──
@@ -799,6 +801,7 @@ const saved = loadSaved();
 
 if (saved) {
   state.power       = saved.power       || 0;
+  state.powerExtra  = saved.powerExtra  || 0;
   state.streak      = saved.streak      || 0;
   state.spheres     = saved.spheres     || 0;
   state.rank        = saved.rank        || 0;
@@ -871,7 +874,12 @@ function toggle(el, day) {
   const isDone = el.classList.contains('done');
   const pts = parseInt(el.dataset.pts||3);
   const delta = isDone ? 1 : -1;
-  state.power = Math.max(0, state.power + delta*pts);
+  const isExtra = el.dataset.extra === 'true';
+  if(isExtra) {
+    state.powerExtra = Math.max(0, state.powerExtra + delta*pts);
+  } else {
+    state.power = Math.max(0, state.power + delta*pts);
+  }
   state.totalDone = Math.max(0, state.totalDone + delta);
   const n = el.querySelector('.activity-name').textContent;
   if(n.includes('Banho'))     state.baths     = Math.max(0, state.baths     + delta);
@@ -885,8 +893,8 @@ function toggle(el, day) {
 // ── PROGRESS ──
 function updateProgress(day) {
   const panel=document.getElementById('day-'+day);
-  const items=panel.querySelectorAll('.activity-item');
-  const done =panel.querySelectorAll('.activity-item.done');
+  const items=panel.querySelectorAll('.activity-item:not([data-extra="true"])');
+  const done =panel.querySelectorAll('.activity-item:not([data-extra="true"]).done');
   const pct  =items.length?done.length/items.length*100:0;
   document.getElementById('fill-'+day).style.width=pct+'%';
   document.getElementById('count-'+day).textContent=done.length+'/'+items.length;
@@ -916,6 +924,7 @@ function updateSpheres(prev,curr){
 // ── STATS ──
 function updateStats(){
   document.getElementById('powerVal').textContent=state.power;
+  document.getElementById('powerExtra').textContent=state.powerExtra;
   const sv=document.getElementById('streakVal');
   sv.innerHTML=state.streak>0?state.streak+' <span class="flame">🔥</span>':'0 <span style="opacity:.3">🔥</span>';
   sv.classList.toggle('on',state.streak>0);
