@@ -572,104 +572,15 @@ body{background:var(--dark);font-family:'Nunito',sans-serif;min-height:100vh;ove
     <br><button class="modal-btn" onclick="grantWish()">✨ CONCEDER DESEJO ✨</button>
   </div>
 </div>
-<div class="modal-overlay" id="rankModal" style="background:rgba(0,0,0,.95);z-index:2000;">
-  <div id="rankUpScene" style="position:relative;width:100%;max-width:420px;text-align:center;padding:20px;">
-    <button class="modal-close" onclick="closeModal('rankModal')" style="position:absolute;top:0;right:10px;z-index:10;">✕</button>
-
-    <!-- Aura -->
-    <div id="ruAura" style="position:absolute;left:50%;top:160px;transform:translateX(-50%);width:220px;height:220px;border-radius:50%;background:radial-gradient(ellipse,rgba(255,215,0,.35) 0%,transparent 70%);animation:auraPulse 1s ease-in-out infinite alternate;pointer-events:none;"></div>
-
-    <!-- Canvas para esferas orbitando -->
-    <canvas id="rankCanvas" width="360" height="360" style="position:absolute;left:50%;top:20px;transform:translateX(-50%);pointer-events:none;z-index:1;"></canvas>
-
-    <!-- Personagem SVG -->
-    <svg id="ruChar" viewBox="0 0 120 200" width="140" height="210" style="position:relative;z-index:2;margin-top:40px;filter:drop-shadow(0 0 20px rgba(255,215,0,.8));">
-      <!-- Corpo -->
-      <ellipse cx="60" cy="155" rx="22" ry="30" fill="#e8a87c"/>
-      <!-- Roupa - top -->
-      <path d="M38 135 Q60 120 82 135 L85 170 Q60 180 35 170 Z" fill="#cc3300"/>
-      <!-- Braços -->
-      <ellipse cx="28" cy="148" rx="10" ry="22" fill="#e8a87c" transform="rotate(-10,28,148)"/>
-      <ellipse cx="92" cy="148" rx="10" ry="22" fill="#e8a87c" transform="rotate(10,92,148)"/>
-      <!-- Mãos -->
-      <circle cx="22" cy="168" r="8" fill="#e8a87c"/>
-      <circle cx="98" cy="168" r="8" fill="#e8a87c"/>
-      <!-- Pernas -->
-      <rect x="42" y="178" width="16" height="30" rx="7" fill="#cc3300"/>
-      <rect x="62" y="178" width="16" height="30" rx="7" fill="#cc3300"/>
-      <!-- Sapatos -->
-      <ellipse cx="50" cy="208" rx="10" ry="5" fill="#222"/>
-      <ellipse cx="70" cy="208" rx="10" ry="5" fill="#222"/>
-      <!-- Pescoço -->
-      <rect x="53" y="118" width="14" height="18" rx="5" fill="#e8a87c"/>
-      <!-- Cabeça -->
-      <ellipse cx="60" cy="100" rx="28" ry="30" fill="#e8a87c"/>
-      <!-- Orelhas -->
-      <ellipse cx="32" cy="102" rx="6" ry="9" fill="#e8a87c"/>
-      <ellipse cx="88" cy="102" rx="6" ry="9" fill="#e8a87c"/>
-      <!-- Olhos normais -->
-      <g id="ruEyesNormal">
-        <ellipse cx="48" cy="97" rx="6" ry="7" fill="#fff"/>
-        <ellipse cx="72" cy="97" rx="6" ry="7" fill="#fff"/>
-        <circle cx="49" cy="98" r="4" fill="#3a1a00"/>
-        <circle cx="73" cy="98" r="4" fill="#3a1a00"/>
-        <circle cx="50" cy="96" r="1.5" fill="#fff"/>
-        <circle cx="74" cy="96" r="1.5" fill="#fff"/>
-      </g>
-      <!-- Olhos SSJ (verdes, escondidos inicialmente) -->
-      <g id="ruEyesSSJ" opacity="0">
-        <ellipse cx="48" cy="97" rx="6" ry="7" fill="#fff"/>
-        <ellipse cx="72" cy="97" rx="6" ry="7" fill="#fff"/>
-        <circle cx="49" cy="98" r="4" fill="#00cc44"/>
-        <circle cx="73" cy="98" r="4" fill="#00cc44"/>
-        <circle cx="50" cy="96" r="1.5" fill="#fff"/>
-        <circle cx="74" cy="96" r="1.5" fill="#fff"/>
-        <!-- brilho verde -->
-        <ellipse cx="48" cy="97" rx="7" ry="8" fill="none" stroke="#00ff66" stroke-width="1.5" opacity=".6"/>
-        <ellipse cx="72" cy="97" rx="7" ry="8" fill="none" stroke="#00ff66" stroke-width="1.5" opacity=".6"/>
-      </g>
-      <!-- Sobrancelhas -->
-      <path d="M42 88 Q48 84 54 88" stroke="#3a1a00" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-      <path d="M66 88 Q72 84 78 88" stroke="#3a1a00" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-      <!-- Nariz -->
-      <ellipse cx="60" cy="106" rx="3" ry="2" fill="#d4896a"/>
-      <!-- Boca sorrindo -->
-      <path d="M50 114 Q60 121 70 114" stroke="#c0714a" stroke-width="2" fill="none" stroke-linecap="round"/>
-      <!-- Cabelo normal (preto) -->
-      <g id="ruHairNormal">
-        <ellipse cx="60" cy="76" rx="28" ry="16" fill="#1a0a00"/>
-        <path d="M32 88 Q28 70 38 58 Q50 48 60 50 Q70 48 82 58 Q92 70 88 88" fill="#1a0a00"/>
-        <path d="M36 95 Q28 80 30 65 Q32 55 38 58" fill="#1a0a00"/>
-        <path d="M84 95 Q92 80 90 65 Q88 55 82 58" fill="#1a0a00"/>
-        <!-- franja -->
-        <path d="M38 72 Q45 60 55 65 Q50 75 42 78 Z" fill="#1a0a00"/>
-        <path d="M82 72 Q75 60 65 65 Q70 75 78 78 Z" fill="#1a0a00"/>
-        <path d="M55 65 Q60 55 65 65 Q62 72 58 72 Z" fill="#1a0a00"/>
-      </g>
-      <!-- Cabelo SSJ (dourado, escondido) -->
-      <g id="ruHairSSJ" opacity="0">
-        <ellipse cx="60" cy="70" rx="28" ry="14" fill="#FFD700"/>
-        <path d="M32 88 Q25 60 38 42 Q50 30 60 32 Q70 30 82 42 Q95 60 88 88" fill="#FFD700"/>
-        <!-- Picos do cabelo SSJ -->
-        <path d="M45 42 Q40 18 50 8 Q55 25 48 42 Z" fill="#FFD700"/>
-        <path d="M60 38 Q60 12 65 2 Q68 18 62 38 Z" fill="#FFD700"/>
-        <path d="M72 42 Q80 18 72 8 Q68 25 70 42 Z" fill="#FFD700"/>
-        <path d="M35 58 Q20 40 28 28 Q36 45 40 58 Z" fill="#FFD700"/>
-        <path d="M85 58 Q100 40 92 28 Q84 45 80 58 Z" fill="#FFD700"/>
-        <!-- brilho no cabelo -->
-        <path d="M48 50 Q52 35 56 50" stroke="#FFFF88" stroke-width="2" fill="none" opacity=".7"/>
-      </g>
-    </svg>
-
-    <!-- Raios de ki -->
-    <div id="ruLightning" style="position:absolute;inset:0;pointer-events:none;opacity:0;z-index:3;"></div>
-
-    <!-- Texto -->
-    <div style="position:relative;z-index:5;margin-top:10px;">
-      <div style="font-family:'Bangers',cursive;font-size:1.1rem;letter-spacing:4px;color:rgba(255,255,255,.6);margin-bottom:4px;">TRANSFORMAÇÃO!</div>
-      <div id="ruRankName" style="font-family:'Bangers',cursive;font-size:2.8rem;color:#FFD700;letter-spacing:6px;text-shadow:0 0 30px #FFD700,0 0 60px #FF8C00;line-height:1;">RANK UP!</div>
-      <div id="ruRankDesc" style="color:rgba(255,255,255,.7);font-size:.95rem;margin:8px 0 16px;font-weight:700;"></div>
-      <button class="modal-btn" onclick="closeModal('rankModal')" style="background:linear-gradient(135deg,#cc8800,#FFD700);color:#000;font-size:1.1rem;">⚡ INCRÍVEL! ⚡</button>
+<div class="modal-overlay" id="rankModal" style="background:rgba(0,0,0,.97);z-index:2000;padding:0;">
+  <div style="position:relative;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+    <button class="modal-close" onclick="closeRankModal()" style="position:fixed;top:18px;right:18px;z-index:10;font-size:1.5rem;">✕</button>
+    <canvas id="rankCanvas" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;"></canvas>
+    <div style="position:relative;z-index:5;text-align:center;padding:20px;margin-top:auto;">
+      <div id="ruLabel" style="font-family:'Bangers',cursive;font-size:1rem;letter-spacing:6px;color:rgba(255,255,255,.5);opacity:0;transition:opacity .5s;">TRANSFORMAÇÃO COMPLETA</div>
+      <div id="ruRankName" style="font-family:'Bangers',cursive;font-size:3.2rem;letter-spacing:6px;line-height:1;margin:6px 0;opacity:0;transition:opacity .6s,text-shadow .6s;">RANK UP!</div>
+      <div id="ruRankDesc" style="font-size:.95rem;color:rgba(255,255,255,.65);font-weight:700;margin-bottom:20px;opacity:0;transition:opacity .5s;"></div>
+      <button id="ruBtn" class="modal-btn" onclick="closeRankModal()" style="opacity:0;transition:opacity .5s;background:linear-gradient(135deg,#aa6600,#FFD700);color:#000;font-size:1.1rem;letter-spacing:3px;">⚡ INCRÍVEL! ⚡</button>
     </div>
   </div>
 </div>
@@ -963,6 +874,13 @@ if (!saved) {
 }
 
 updateSpheres(0, state.spheres);
+// Recalcula esferas do completedDays real (pós recalculo do DOM)
+const WD_INIT=['segunda','terca','quarta','quinta','sexta'];
+const realSpheres = WD_INIT.filter(d=>state.completedDays[d]===true).length;
+if(realSpheres !== state.spheres){
+  state.spheres = realSpheres;
+  updateSpheres(0, state.spheres);
+}
 updateStats();
 checkAchievements();
 
@@ -1061,121 +979,545 @@ function updateStats(){
   });
 }
 
-function showRankUp(r){
-  document.getElementById('ruRankName').textContent = r.emoji+' '+r.name.toUpperCase();
-  document.getElementById('ruRankName').style.color = r.color;
-  document.getElementById('ruRankName').style.textShadow = `0 0 30px ${r.color},0 0 60px ${r.color}`;
-  document.getElementById('ruRankDesc').textContent = 'Você se tornou '+r.name+'!';
-  document.getElementById('ruAura').style.background = `radial-gradient(ellipse,${r.color}55 0%,transparent 70%)`;
+function closeRankModal(){
+  closeModal('rankModal');
+  if(window._rankAnimId) cancelAnimationFrame(window._rankAnimId);
+}
 
-  // Reset estado da personagem
-  const hairN = document.getElementById('ruHairNormal');
-  const hairS = document.getElementById('ruHairSSJ');
-  const eyesN = document.getElementById('ruEyesNormal');
-  const eyesS = document.getElementById('ruEyesSSJ');
-  const lightning = document.getElementById('ruLightning');
-  hairN.style.opacity='1'; hairS.style.opacity='0';
-  eyesN.style.opacity='1'; eyesS.style.opacity='0';
-  lightning.style.opacity='0'; lightning.innerHTML='';
+function showRankUp(r){
+  // Update text
+  const nameEl = document.getElementById('ruRankName');
+  const descEl = document.getElementById('ruRankDesc');
+  const labelEl = document.getElementById('ruLabel');
+  const btnEl = document.getElementById('ruBtn');
+  nameEl.textContent = r.emoji+' '+r.name.toUpperCase();
+  nameEl.style.color = r.color;
+  descEl.textContent = 'Parabéns, guerreira! Você evoluiu!';
+  nameEl.style.opacity='0'; descEl.style.opacity='0';
+  labelEl.style.opacity='0'; btnEl.style.opacity='0';
 
   openModal('rankModal');
 
-  // Canvas — esferas orbitando
   const canvas = document.getElementById('rankCanvas');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
   const ctx = canvas.getContext('2d');
-  let angle = 0;
-  let animRunning = true;
-  const balls = [1,2,3,4,5,6,7].map((n,i)=>({n, a: (i/7)*Math.PI*2, r:130, exploded:false, ex:0, ey:0, vx:0, vy:0}));
+  const W = canvas.width, H = canvas.height;
+  const cx = W/2, cy = H*0.42;
+  const scale = Math.min(W,H) / 500;
 
-  function drawBallCanvas(ctx,x,y,r,n){
-    const grd=ctx.createRadialGradient(x-r*.3,y-r*.3,r*.05,x,y,r);
-    grd.addColorStop(0,'#FFE066'); grd.addColorStop(.6,'#FF8C00'); grd.addColorStop(1,'#CC4400');
-    ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2);
-    ctx.fillStyle=grd; ctx.shadowColor='#FFD700'; ctx.shadowBlur=12; ctx.fill();
-    ctx.shadowBlur=0;
-    ctx.fillStyle='#CC2200'; ctx.font=`bold ${r*.6}px sans-serif`;
-    ctx.textAlign='center'; ctx.textBaseline='middle';
-    ctx.fillText(n,x,y+1);
+  let t = 0;
+  let phase = 0; // 0=intro, 1=normal, 2=charging, 3=flash, 4=ssj, 5=done
+  let phaseT = 0;
+  let hairT = 0; // 0=black, 1=gold
+  let auraT = 0;
+  let eyeT = 0; // 0=dark, 1=teal
+  let flashAlpha = 0;
+  let particles = [];
+  let balls = Array.from({length:7},(_,i)=>({
+    i, angle:(i/7)*Math.PI*2, r:160*scale, size:14*scale,
+    exploded:false, x:0,y:0,vx:0,vy:0,alpha:1
+  }));
+
+  // Skin tone
+  const skin='#f0c090', skinDark='#d4956a', skinShad='#c07848';
+  const clothR='#cc2200', clothRD='#880000';
+  const hairBlack='#1a0800', hairGold='#FFD700', hairHighlight='#FFF176';
+
+  function lerp(a,b,t){return a+(b-a)*Math.max(0,Math.min(1,t));}
+  function easeOut(t){return 1-Math.pow(1-t,3);}
+  function easeInOut(t){return t<.5?4*t*t*t:(t-1)*(2*t-2)*(2*t-2)+1;}
+
+  function drawAura(alpha, color, pulse){
+    if(alpha<=0) return;
+    const r1 = (110+pulse*20)*scale;
+    const r2 = (180+pulse*40)*scale;
+    // Outer glow
+    const g1 = ctx.createRadialGradient(cx,cy,r1*.2,cx,cy,r2);
+    g1.addColorStop(0, color.replace(')',`,${alpha*.6})`).replace('rgb','rgba'));
+    g1.addColorStop(.5, color.replace(')',`,${alpha*.2})`).replace('rgb','rgba'));
+    g1.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.beginPath(); ctx.ellipse(cx,cy+30*scale,r2*.7,r2,0,0,Math.PI*2);
+    ctx.fillStyle=g1; ctx.fill();
+    // Ki rays
+    if(alpha>0.3){
+      ctx.save();
+      ctx.translate(cx,cy+20*scale);
+      for(let i=0;i<12;i++){
+        const ra=(i/12)*Math.PI*2+t*.02;
+        const len=(60+Math.sin(t*.1+i)*20)*scale*alpha;
+        ctx.beginPath();
+        ctx.moveTo(0,0);
+        ctx.lineTo(Math.cos(ra)*len, Math.sin(ra)*len*0.5);
+        ctx.strokeStyle=`rgba(255,230,80,${alpha*.3})`;
+        ctx.lineWidth=3*scale; ctx.stroke();
+      }
+      ctx.restore();
+    }
   }
 
-  let phase = 'orbit'; // orbit → transform → explode
-  let phaseTimer = 0;
+  function drawGirl(hairBlend, eyeBlend, chargeT){
+    const s = scale * lerp(0.85, 1, easeOut(Math.min(1, t/30)));
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.scale(s, s);
 
-  function animRankUp(){
-    if(!animRunning) return;
-    ctx.clearRect(0,0,360,360);
-    phaseTimer++;
-    const cx=180, cy=200;
+    const hairCol = lerpColor(hairBlack, hairGold, hairBlend);
+    const eyeCol = lerpColor('#2a1000','#00ddaa', eyeBlend);
+    const eyeGlow = eyeBlend > 0.5;
 
-    if(phase==='orbit'){
-      angle += 0.04;
-      balls.forEach(b=>{
-        const x = cx + Math.cos(b.a+angle)*b.r;
-        const y = cy + Math.sin(b.a+angle)*b.r*.4;
-        drawBallCanvas(ctx,x,y,12,b.n);
-      });
-      if(phaseTimer===50){
-        phase='transform'; phaseTimer=0;
-        // Transforma personagem
-        setTimeout(()=>{
-          hairN.style.transition='opacity .3s'; hairN.style.opacity='0';
-          // Flash branco
-          lightning.style.opacity='1';
-          for(let i=0;i<8;i++){
-            const bolt=document.createElement('div');
-            const a=(i/8)*360;
-            bolt.style.cssText=`position:absolute;width:3px;height:${40+Math.random()*40}px;background:linear-gradient(${a}deg,#fff,transparent);left:50%;top:50%;transform:rotate(${a}deg) translateY(-60px);animation:boltFlash2 .2s ease ${Math.random()*.3}s 3;border-radius:2px;`;
-            lightning.appendChild(bolt);
-          }
-          setTimeout(()=>{
-            hairS.style.transition='opacity .4s'; hairS.style.opacity='1';
-            hairS.style.animation='hairGrow .5s ease';
-            eyesN.style.opacity='0'; eyesS.style.opacity='1';
-            lightning.style.opacity='0';
-          },300);
-        },200);
-      }
+    // Shadow
+    const shad = ctx.createRadialGradient(0,160,0,0,160,80);
+    shad.addColorStop(0,'rgba(0,0,0,.4)'); shad.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.beginPath(); ctx.ellipse(0,165,55,15,0,0,Math.PI*2);
+    ctx.fillStyle=shad; ctx.fill();
+
+    // --- PERNAS ---
+    // Perna esq
+    ctx.beginPath();
+    ctx.roundRect(-22,100,20,65,10);
+    ctx.fillStyle=clothR; ctx.fill();
+    // sombra perna esq
+    ctx.beginPath(); ctx.roundRect(-22,100,8,65,10);
+    ctx.fillStyle=clothRD; ctx.fill();
+    // Perna dir
+    ctx.beginPath(); ctx.roundRect(2,100,20,65,10);
+    ctx.fillStyle=clothR; ctx.fill();
+    ctx.beginPath(); ctx.roundRect(2,100,8,65,10);
+    ctx.fillStyle=clothRD; ctx.fill();
+    // Sapatos
+    ctx.beginPath(); ctx.ellipse(-12,165,14,7,-.1,0,Math.PI*2);
+    ctx.fillStyle='#111'; ctx.fill();
+    ctx.beginPath(); ctx.ellipse(12,165,14,7,.1,0,Math.PI*2);
+    ctx.fillStyle='#111'; ctx.fill();
+
+    // --- CORPO ---
+    // Torso
+    const bodyG = ctx.createLinearGradient(-28,10,28,10);
+    bodyG.addColorStop(0,clothRD); bodyG.addColorStop(.4,clothR); bodyG.addColorStop(1,clothRD);
+    ctx.beginPath();
+    ctx.moveTo(-28,15); ctx.bezierCurveTo(-32,30,-30,100,-22,105);
+    ctx.lineTo(22,105); ctx.bezierCurveTo(30,100,32,30,28,15);
+    ctx.bezierCurveTo(18,5,0,-2,-28,15);
+    ctx.fillStyle=bodyG; ctx.fill();
+    // Cinto
+    ctx.beginPath(); ctx.roundRect(-24,88,48,12,4);
+    ctx.fillStyle='#660000'; ctx.fill();
+    // Detalhe centro
+    ctx.beginPath(); ctx.roundRect(-4,88,8,12,2);
+    ctx.fillStyle='#FFD700'; ctx.fill();
+
+    // --- BRAÇOS ---
+    // Braço esq (levantado em pose de poder durante charge)
+    const armLiftL = chargeT * 0.4;
+    ctx.save();
+    ctx.translate(-28, 20);
+    ctx.rotate(-0.3 - armLiftL);
+    // upper arm
+    ctx.beginPath(); ctx.roundRect(-8,0,16,38,8);
+    const armG = ctx.createLinearGradient(-8,0,8,0);
+    armG.addColorStop(0,skinShad); armG.addColorStop(.5,skin); armG.addColorStop(1,skinDark);
+    ctx.fillStyle=armG; ctx.fill();
+    // elbow
+    ctx.beginPath(); ctx.arc(0,38,8,0,Math.PI*2);
+    ctx.fillStyle=skin; ctx.fill();
+    // lower arm
+    ctx.beginPath(); ctx.roundRect(-7,38,14,34,7);
+    ctx.fillStyle=skin; ctx.fill();
+    // hand
+    ctx.beginPath(); ctx.arc(0,74,9,0,Math.PI*2);
+    ctx.fillStyle=skin; ctx.fill();
+    if(eyeGlow){
+      const kig=ctx.createRadialGradient(0,74,0,0,74,22);
+      kig.addColorStop(0,`rgba(255,220,0,${chargeT*.7})`);
+      kig.addColorStop(1,'rgba(255,200,0,0)');
+      ctx.beginPath(); ctx.arc(0,74,22,0,Math.PI*2);
+      ctx.fillStyle=kig; ctx.fill();
     }
+    ctx.restore();
 
-    if(phase==='transform'){
-      angle += 0.04;
-      // Esferas se aproximam do centro
-      balls.forEach(b=>{
-        b.r = Math.max(40, b.r - 1.2);
-        const x = cx + Math.cos(b.a+angle)*b.r;
-        const y = cy + Math.sin(b.a+angle)*b.r*.4;
-        drawBallCanvas(ctx,x,y,12,b.n);
-      });
-      if(phaseTimer===60){
-        phase='explode'; phaseTimer=0;
-        balls.forEach(b=>{
-          const x = cx + Math.cos(b.a+angle)*b.r;
-          const y = cy + Math.sin(b.a+angle)*b.r*.4;
-          b.ex=x; b.ey=y;
-          b.vx=(Math.random()-.5)*18;
-          b.vy=(Math.random()-.5)*18-8;
-          b.exploded=true;
-        });
-      }
-    }
+    // Braço dir
+    const armLiftR = chargeT * 0.3;
+    ctx.save();
+    ctx.translate(28, 20);
+    ctx.rotate(0.3 + armLiftR);
+    ctx.beginPath(); ctx.roundRect(-8,0,16,38,8);
+    ctx.fillStyle=skin; ctx.fill();
+    ctx.beginPath(); ctx.arc(0,38,8,0,Math.PI*2);
+    ctx.fillStyle=skin; ctx.fill();
+    ctx.beginPath(); ctx.roundRect(-7,38,14,34,7);
+    ctx.fillStyle=skin; ctx.fill();
+    ctx.beginPath(); ctx.arc(0,74,9,0,Math.PI*2);
+    ctx.fillStyle=skin; ctx.fill();
+    ctx.restore();
 
-    if(phase==='explode'){
-      // Aura pulsa com cor do rank
+    // --- PESCOÇO ---
+    ctx.beginPath(); ctx.roundRect(-8,-8,16,20,6);
+    ctx.fillStyle=skin; ctx.fill();
+
+    // --- CABEÇA ---
+    // Cabelo traseiro (antes da cabeça)
+    ctx.save();
+    if(hairBlend > 0.3){
       ctx.beginPath();
-      ctx.arc(cx,cy,60+Math.sin(phaseTimer*.15)*15,0,Math.PI*2);
-      ctx.fillStyle=r.color+'33'; ctx.fill();
-      // Esferas voam para fora
-      balls.forEach(b=>{
-        b.vy+=0.4; b.ex+=b.vx; b.ey+=b.vy;
-        b.vx*=0.97;
-        if(b.ey<360) drawBallCanvas(ctx,b.ex,b.ey,10,b.n);
-      });
-      if(phaseTimer>80) animRunning=false;
+      ctx.moveTo(-28,-50);
+      ctx.bezierCurveTo(-40,-70,-35,-110,-20,-130);
+      ctx.bezierCurveTo(-10,-145,0,-148,0,-148);
+      ctx.bezierCurveTo(0,-148,10,-145,20,-130);
+      ctx.bezierCurveTo(35,-110,40,-70,28,-50);
+      ctx.closePath();
+      ctx.fillStyle=hairCol; ctx.fill();
+    } else {
+      ctx.beginPath();
+      ctx.moveTo(-28,-50);
+      ctx.bezierCurveTo(-36,-60,-34,-90,-20,-100);
+      ctx.bezierCurveTo(-10,-108,0,-110,0,-110);
+      ctx.bezierCurveTo(0,-110,10,-108,20,-100);
+      ctx.bezierCurveTo(34,-90,36,-60,28,-50);
+      ctx.closePath();
+      ctx.fillStyle=hairCol; ctx.fill();
+    }
+    ctx.restore();
+
+    // Cabeça
+    const faceG = ctx.createRadialGradient(-8,-60,5,0,-55,38);
+    faceG.addColorStop(0,'#fddbb0'); faceG.addColorStop(.7,skin); faceG.addColorStop(1,skinDark);
+    ctx.beginPath();
+    ctx.moveTo(-26,-40);
+    ctx.bezierCurveTo(-32,-45,-32,-80,-20,-90);
+    ctx.bezierCurveTo(-10,-98,10,-98,20,-90);
+    ctx.bezierCurveTo(32,-80,32,-45,26,-40);
+    ctx.bezierCurveTo(18,-32,12,-28,0,-28);
+    ctx.bezierCurveTo(-12,-28,-18,-32,-26,-40);
+    ctx.fillStyle=faceG; ctx.fill();
+    // jaw shadow
+    ctx.beginPath();
+    ctx.bezierCurveTo(-26,-40,-20,-20,-12,-15);
+    ctx.bezierCurveTo(-6,-11,6,-11,12,-15);
+    ctx.bezierCurveTo(20,-20,26,-40,26,-40);
+    ctx.strokeStyle=skinShad; ctx.lineWidth=1; ctx.stroke();
+
+    // Orelhas
+    ctx.beginPath(); ctx.ellipse(-27,-58,7,10,.1,0,Math.PI*2);
+    ctx.fillStyle=skin; ctx.fill();
+    ctx.beginPath(); ctx.ellipse(-27,-58,4,6,.1,0,Math.PI*2);
+    ctx.fillStyle=skinDark; ctx.fill();
+    ctx.beginPath(); ctx.ellipse(27,-58,7,10,-.1,0,Math.PI*2);
+    ctx.fillStyle=skin; ctx.fill();
+    ctx.beginPath(); ctx.ellipse(27,-58,4,6,-.1,0,Math.PI*2);
+    ctx.fillStyle=skinDark; ctx.fill();
+
+    // --- OLHOS ---
+    // Olho esq
+    ctx.save();
+    // Formato amendoado
+    ctx.beginPath();
+    ctx.moveTo(-22,-62); ctx.bezierCurveTo(-20,-68,-10,-68,-8,-62);
+    ctx.bezierCurveTo(-10,-56,-20,-56,-22,-62);
+    ctx.fillStyle='#fff'; ctx.fill();
+    ctx.beginPath();
+    ctx.arc(-15,-62,5,0,Math.PI*2);
+    ctx.fillStyle=eyeCol; ctx.fill();
+    ctx.beginPath(); ctx.arc(-15,-62,2.5,0,Math.PI*2);
+    ctx.fillStyle='#000'; ctx.fill();
+    ctx.beginPath(); ctx.arc(-13,-64,1.5,0,Math.PI*2);
+    ctx.fillStyle='#fff'; ctx.fill();
+    // cílios
+    ctx.strokeStyle='#1a0800'; ctx.lineWidth=1.5;
+    for(let i=0;i<4;i++){
+      const ex=-22+i*4, ey=-62;
+      ctx.beginPath(); ctx.moveTo(ex,ey); ctx.lineTo(ex-1+i,-68-i*0.5);
+      ctx.stroke();
+    }
+    if(eyeGlow){
+      ctx.beginPath(); ctx.arc(-15,-62,8,0,Math.PI*2);
+      ctx.fillStyle=`rgba(0,255,180,${eyeBlend*.25})`; ctx.fill();
+    }
+    ctx.restore();
+
+    // Olho dir
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(8,-62); ctx.bezierCurveTo(10,-68,20,-68,22,-62);
+    ctx.bezierCurveTo(20,-56,10,-56,8,-62);
+    ctx.fillStyle='#fff'; ctx.fill();
+    ctx.beginPath(); ctx.arc(15,-62,5,0,Math.PI*2);
+    ctx.fillStyle=eyeCol; ctx.fill();
+    ctx.beginPath(); ctx.arc(15,-62,2.5,0,Math.PI*2);
+    ctx.fillStyle='#000'; ctx.fill();
+    ctx.beginPath(); ctx.arc(17,-64,1.5,0,Math.PI*2);
+    ctx.fillStyle='#fff'; ctx.fill();
+    ctx.strokeStyle='#1a0800'; ctx.lineWidth=1.5;
+    for(let i=0;i<4;i++){
+      const ex=8+i*4, ey=-62;
+      ctx.beginPath(); ctx.moveTo(ex,ey); ctx.lineTo(ex-1+i,-68-i*0.5);
+      ctx.stroke();
+    }
+    if(eyeGlow){
+      ctx.beginPath(); ctx.arc(15,-62,8,0,Math.PI*2);
+      ctx.fillStyle=`rgba(0,255,180,${eyeBlend*.25})`; ctx.fill();
+    }
+    ctx.restore();
+
+    // Sobrancelhas
+    ctx.strokeStyle=hairBlend>0.5 ? '#8B6914' : '#2a1000';
+    ctx.lineWidth=2.5; ctx.lineCap='round';
+    ctx.beginPath(); ctx.moveTo(-22,-70); ctx.bezierCurveTo(-16,-74,-10,-73,-8,-70); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(8,-70); ctx.bezierCurveTo(10,-73,16,-74,22,-70); ctx.stroke();
+
+    // Nariz
+    ctx.beginPath(); ctx.moveTo(-4,-46); ctx.bezierCurveTo(-6,-42,-6,-38,-4,-37);
+    ctx.bezierCurveTo(-2,-36,2,-36,4,-37); ctx.bezierCurveTo(6,-38,6,-42,4,-46);
+    ctx.strokeStyle=skinShad; ctx.lineWidth=1.5; ctx.stroke();
+
+    // Boca
+    ctx.beginPath();
+    ctx.moveTo(-12,-28); ctx.bezierCurveTo(-8,-22,8,-22,12,-28);
+    ctx.strokeStyle='#c07850'; ctx.lineWidth=2; ctx.stroke();
+    // lábio
+    ctx.beginPath();
+    ctx.moveTo(-10,-26); ctx.bezierCurveTo(-5,-21,5,-21,10,-26);
+    ctx.bezierCurveTo(6,-24,0,-23,-10,-26);
+    ctx.fillStyle='#e0846a'; ctx.fill();
+
+    // Bochecha blush
+    const blushA = lerp(0.18, 0.08, hairBlend);
+    ctx.beginPath(); ctx.ellipse(-19,-48,9,5,-.2,0,Math.PI*2);
+    ctx.fillStyle=`rgba(255,150,130,${blushA})`; ctx.fill();
+    ctx.beginPath(); ctx.ellipse(19,-48,9,5,.2,0,Math.PI*2);
+    ctx.fillStyle=`rgba(255,150,130,${blushA})`; ctx.fill();
+
+    // --- CABELO FRENTE ---
+    ctx.fillStyle=hairCol;
+    // Topo da cabeça
+    ctx.beginPath();
+    ctx.moveTo(-28,-55);
+    ctx.bezierCurveTo(-30,-80,-20,-95,-10,-95);
+    ctx.bezierCurveTo(-5,-95,5,-95,10,-95);
+    ctx.bezierCurveTo(20,-95,30,-80,28,-55);
+    ctx.bezierCurveTo(18,-48,0,-44,-28,-55);
+    ctx.fill();
+
+    // Franja
+    ctx.beginPath();
+    ctx.moveTo(-25,-55);
+    ctx.bezierCurveTo(-28,-62,-22,-72,-14,-70);
+    ctx.bezierCurveTo(-8,-68,-6,-60,-8,-55);
+    ctx.bezierCurveTo(-14,-52,-22,-52,-25,-55);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(-8,-55);
+    ctx.bezierCurveTo(-6,-65,2,-70,8,-68);
+    ctx.bezierCurveTo(14,-66,14,-56,10,-54);
+    ctx.bezierCurveTo(4,-52,-4,-52,-8,-55);
+    ctx.fill();
+
+    if(hairBlend < 0.7){
+      // Cabelo lateral preto caindo
+      ctx.beginPath();
+      ctx.moveTo(-28,-52);
+      ctx.bezierCurveTo(-36,-40,-38,-10,-34,20);
+      ctx.bezierCurveTo(-32,35,-28,40,-24,38);
+      ctx.bezierCurveTo(-22,36,-22,30,-26,18);
+      ctx.bezierCurveTo(-30,-5,-26,-35,-24,-50);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.moveTo(28,-52);
+      ctx.bezierCurveTo(36,-40,38,-10,34,20);
+      ctx.bezierCurveTo(32,35,28,40,24,38);
+      ctx.bezierCurveTo(22,36,22,30,26,18);
+      ctx.bezierCurveTo(30,-5,26,-35,24,-50);
+      ctx.fill();
     }
 
-    requestAnimationFrame(animRankUp);
+    // Picos SSJ (aparecem com o cabelo dourado)
+    if(hairBlend > 0.4){
+      const pA = easeOut((hairBlend-.4)/.6);
+      ctx.globalAlpha = pA;
+      ctx.fillStyle=hairCol;
+      // Pico central
+      ctx.beginPath();
+      ctx.moveTo(-8,-92); ctx.bezierCurveTo(-10,-115,0,-145,0,-145);
+      ctx.bezierCurveTo(0,-145,10,-115,8,-92);
+      ctx.bezierCurveTo(4,-88,-4,-88,-8,-92); ctx.fill();
+      // Pico esq
+      ctx.beginPath();
+      ctx.moveTo(-20,-88); ctx.bezierCurveTo(-30,-108,-18,-135,-12,-130);
+      ctx.bezierCurveTo(-6,-125,-2,-105,-8,-90);
+      ctx.bezierCurveTo(-12,-86,-18,-84,-20,-88); ctx.fill();
+      // Pico dir
+      ctx.beginPath();
+      ctx.moveTo(20,-88); ctx.bezierCurveTo(30,-108,18,-135,12,-130);
+      ctx.bezierCurveTo(6,-125,2,-105,8,-90);
+      ctx.bezierCurveTo(12,-86,18,-84,20,-88); ctx.fill();
+      // Pico lateral esq
+      ctx.beginPath();
+      ctx.moveTo(-26,-72); ctx.bezierCurveTo(-42,-88,-38,-115,-28,-108);
+      ctx.bezierCurveTo(-20,-102,-16,-82,-22,-74);
+      ctx.bezierCurveTo(-24,-70,-26,-68,-26,-72); ctx.fill();
+      // Pico lateral dir
+      ctx.beginPath();
+      ctx.moveTo(26,-72); ctx.bezierCurveTo(42,-88,38,-115,28,-108);
+      ctx.bezierCurveTo(20,-102,16,-82,22,-74);
+      ctx.bezierCurveTo(24,-70,26,-68,26,-72); ctx.fill();
+      // Highlights no cabelo
+      ctx.globalAlpha = pA * 0.5;
+      ctx.strokeStyle=hairHighlight; ctx.lineWidth=2;
+      ctx.beginPath(); ctx.moveTo(-4,-92); ctx.bezierCurveTo(-2,-118,2,-138,0,-145); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(-16,-88); ctx.bezierCurveTo(-14,-110,-8,-128,-12,-130); ctx.stroke();
+      ctx.globalAlpha = 1;
+    }
+
+    ctx.restore();
   }
-  animRankUp();
+
+  function lerpColor(a,b,t){
+    const pa=parseInt(a.slice(1),16), pb=parseInt(b.slice(1),16);
+    const ar=(pa>>16)&255,ag=(pa>>8)&255,ab=pa&255;
+    const br=(pb>>16)&255,bg=(pb>>8)&255,bb=pb&255;
+    const rr=Math.round(ar+(br-ar)*t), rg=Math.round(ag+(bg-ag)*t), rb=Math.round(ab+(bb-ab)*t);
+    return '#'+(rr<<16|rg<<8|rb).toString(16).padStart(6,'0');
+  }
+
+  function drawDragonBall(ctx,x,y,r,n){
+    ctx.save();
+    const g=ctx.createRadialGradient(x-r*.35,y-r*.35,r*.05,x,y,r);
+    g.addColorStop(0,'#FFF5aa'); g.addColorStop(.3,'#FFD700'); g.addColorStop(.7,'#FF8C00'); g.addColorStop(1,'#CC4400');
+    ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2);
+    ctx.fillStyle=g;
+    ctx.shadowColor='#FFD700'; ctx.shadowBlur=r*1.5; ctx.fill(); ctx.shadowBlur=0;
+    // Brilho
+    ctx.beginPath(); ctx.arc(x-r*.25,y-r*.25,r*.35,0,Math.PI*2);
+    ctx.fillStyle='rgba(255,255,255,.25)'; ctx.fill();
+    // Estrelas
+    ctx.fillStyle='#cc2200';
+    const dots=[[0,0],[-.3,-.3],[.3,-.3],[-.3,.3],[.3,.3],[0,-.45],[0,.45]].slice(0,n);
+    dots.forEach(([dx,dy])=>{
+      ctx.beginPath(); ctx.arc(x+dx*r*.7,y+dy*r*.7,r*.12,0,Math.PI*2); ctx.fill();
+    });
+    ctx.restore();
+  }
+
+  function spawnParticles(){
+    for(let i=0;i<60;i++){
+      const a=Math.random()*Math.PI*2, sp=(2+Math.random()*8)*scale;
+      particles.push({x:cx,y:cy,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp-4*scale,
+        r:(2+Math.random()*4)*scale, alpha:1,
+        color:['#FFD700','#FF8C00','#fff','#7ECFFF','#00ffaa'][Math.floor(Math.random()*5)]});
+    }
+  }
+
+  let groundShake=0;
+
+  function frame(){
+    ctx.clearRect(0,0,W,H);
+    t++;
+    phaseT++;
+
+    // Background gradient
+    const bgA = Math.min(1, t/20);
+    const bg=ctx.createRadialGradient(cx,cy,0,cx,cy,Math.max(W,H));
+    bg.addColorStop(0,`rgba(10,5,30,${bgA})`);
+    bg.addColorStop(1,`rgba(0,0,8,${bgA})`);
+    ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
+
+    // Phase transitions
+    if(phase===0 && phaseT>40){phase=1;phaseT=0;}
+    if(phase===1 && phaseT>80){phase=2;phaseT=0;}
+    if(phase===2 && phaseT>70){phase=3;phaseT=0; spawnParticles();}
+    if(phase===3 && phaseT>40){phase=4;phaseT=0;}
+    if(phase===4 && phaseT>100){phase=5;phaseT=0;}
+
+    // Smooth interpolations
+    const targetHair = phase>=3 ? 1 : 0;
+    hairT = lerp(hairT, targetHair, phase>=3 ? 0.04 : 0);
+    const targetEye = phase>=3 ? 1 : 0;
+    eyeT = lerp(eyeT, targetEye, phase>=3 ? 0.05 : 0);
+    const targetAura = phase>=1 ? (phase>=3 ? 1 : 0.4) : 0;
+    auraT = lerp(auraT, targetAura, 0.04);
+    const chargeT = phase===2 ? easeInOut(phaseT/70) : (phase>=3?1:0);
+
+    // Ground shake during phase 2
+    if(phase===2) groundShake = Math.sin(phaseT*.8)*3*scale*(phaseT/70);
+    else groundShake*=0.85;
+
+    ctx.save();
+    ctx.translate(0, groundShake);
+
+    // Aura color
+    const auraColor = phase<3 ? 'rgb(255,240,100)' : r.color.startsWith('#') ?
+      `rgb(${parseInt(r.color.slice(1,3),16)},${parseInt(r.color.slice(3,5),16)},${parseInt(r.color.slice(5,7),16)})` :
+      'rgb(255,215,0)';
+    const auraPulse = Math.sin(t*.08)*0.5+0.5;
+    drawAura(auraT, auraColor, auraPulse);
+
+    // Dragon balls orbit
+    const orbSpeed = phase===2 ? 0.08 : phase===3 ? 0.15 : 0.03;
+    balls.forEach(b=>{
+      if(b.exploded){
+        b.x+=b.vx; b.y+=b.vy; b.vy+=0.4*scale; b.alpha*=0.96;
+        if(b.alpha>0.05) drawDragonBall(ctx,b.x,b.y,b.size*b.alpha,b.i+1);
+      } else {
+        b.angle+=orbSpeed;
+        const orbitR = phase===2 ? lerp(160,80,easeInOut(phaseT/70))*scale : 140*scale;
+        b.x = cx+Math.cos(b.angle)*orbitR;
+        b.y = cy+Math.sin(b.angle)*orbitR*0.35+20*scale;
+        drawDragonBall(ctx,b.x,b.y,b.size,b.i+1);
+        if(phase===3 && phaseT===1){
+          b.exploded=true;
+          b.vx=(b.x-cx)*.12;
+          b.vy=(b.y-cy)*.12-6*scale;
+        }
+      }
+    });
+
+    // Charging sparks
+    if(phase===2){
+      for(let i=0;i<3;i++){
+        const a=Math.random()*Math.PI*2, d=(50+Math.random()*80)*scale;
+        ctx.beginPath();
+        ctx.moveTo(cx+Math.cos(a)*d, cy+Math.sin(a)*d*0.4+20*scale);
+        ctx.lineTo(cx,cy+20*scale);
+        ctx.strokeStyle=`rgba(255,240,80,${Math.random()*.4})`;
+        ctx.lineWidth=2*scale; ctx.stroke();
+      }
+    }
+
+    // Flash
+    if(phase===3){
+      flashAlpha = lerp(flashAlpha, phase===3&&phaseT<20?1:0, 0.12);
+      ctx.fillStyle=`rgba(255,255,255,${flashAlpha})`;
+      ctx.fillRect(0,0,W,H);
+    } else {flashAlpha*=0.85;}
+
+    // Draw character
+    drawGirl(hairT, eyeT, chargeT);
+
+    // Particles
+    particles = particles.filter(p=>p.alpha>0.05);
+    particles.forEach(p=>{
+      p.x+=p.vx; p.y+=p.vy; p.vy+=0.15*scale; p.alpha*=0.95; p.vx*=0.98;
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=p.color; ctx.globalAlpha=p.alpha; ctx.fill();
+      ctx.globalAlpha=1;
+    });
+
+    ctx.restore();
+
+    // Show text when done
+    if(phase===4 && phaseT===30){
+      nameEl.style.opacity='1';
+      nameEl.style.textShadow=`0 0 30px ${r.color},0 0 80px ${r.color}`;
+      setTimeout(()=>{labelEl.style.opacity='1';},200);
+      setTimeout(()=>{descEl.style.opacity='1';},400);
+      setTimeout(()=>{btnEl.style.opacity='1';},700);
+    }
+
+    if(phase<5 || particles.length>0 || flashAlpha>0.01)
+      window._rankAnimId=requestAnimationFrame(frame);
+  }
+
+  frame();
   kiBlast(document.querySelector('.character-badge'));
 }
 
