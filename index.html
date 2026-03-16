@@ -1002,9 +1002,12 @@ if (saved) {
   state.weekHistory   = saved.weekHistory || [];
   state.currentWeek   = saved.currentWeek || 1;
   state.currentMonth  = saved.currentMonth || '';
-  // Recalcula rank silenciosamente dos pontos (evita re-disparar modal)
+  // Recalcula rank silenciosamente — só mantém se semana estava completa
   let _ri=0; RANKS.forEach((r,i)=>{if(state.power>=r.min)_ri=i;});
-  state.rank = Math.max(state.rank, _ri);
+  const _WD=['segunda','terca','quarta','quinta','sexta'];
+  const _semanaOk = _WD.every(d=>(state.completedDays||{})[d]===true);
+  if(_semanaOk) state.rank = Math.max(state.rank, _ri);
+  // Se semana não completa, mantém o rank já conquistado (não regride, não sobe)
 }
 
 renderWeekHistory(); renderAchievements();
@@ -1131,10 +1134,12 @@ function updateStats(){
   if(state.spheres !== prevSpheres) updateSpheres(prevSpheres, state.spheres);
   document.getElementById('sphereVal').innerHTML=state.spheres+' <span style="font-size:.85rem;color:rgba(255,255,255,.35)">/7</span>';
 
-  // Rank baseado nos pontos obrigatórios (state.power), nunca regride
+  // Rank sobe quando todos os 5 dias da semana estiverem completos
+  const WEEK_DAYS_R=['segunda','terca','quarta','quinta','sexta'];
+  const semanaCompleta = WEEK_DAYS_R.every(d=>state.completedDays[d]===true);
   const prevRank = state.rank;
   let ri=0; RANKS.forEach((r,i)=>{if(state.power>=r.min)ri=i;});
-  state.rank = Math.max(state.rank, ri);
+  if(semanaCompleta) state.rank = Math.max(state.rank, ri);
   const rankExibido = state.rank;
 
   const r=RANKS[rankExibido], nextR=RANKS[rankExibido+1];
