@@ -1071,6 +1071,7 @@ function toggle(el, day) {
     state.power = Math.max(0, state.power + delta*pts);
   }
   state.totalDone = Math.max(0, state.totalDone + delta);
+  playSound(isDone ? 'check' : 'uncheck');
   const n = el.querySelector('.activity-name').textContent;
   if(n.includes('Banho'))     state.baths     = Math.max(0, state.baths     + delta);
   if(n.includes('Escola'))    state.schoolDays= Math.max(0, state.schoolDays+ delta);
@@ -1093,7 +1094,7 @@ function updateProgress(day) {
   state.completedDays[day]=isDayDone;
   const msg=document.getElementById('complete-'+day);
   if(msg){if(isDayDone)msg.classList.add('show');else msg.classList.remove('show');}
-  if(isDayDone && !wasDayDone) setTimeout(()=>triggerCelebration(day), 300);
+  if(isDayDone && !wasDayDone) { playSound('dayComplete'); setTimeout(()=>triggerCelebration(day), 300); }
   const prev=state.spheres;
   const WEEK_DAYS=['segunda','terca','quarta','quinta','sexta'];
   state.spheres=WEEK_DAYS.filter(d=>state.completedDays[d]===true).length;
@@ -1109,6 +1110,7 @@ function updateSpheres(prev,curr){
     else{b.classList.remove('earned');b.classList.add('locked');}
   });
   if(curr===7&&prev<7) setTimeout(openDragonModal,600);
+  if(curr>prev) playSound('sphere');
 }
 
 // ── STATS ──
@@ -1164,6 +1166,7 @@ function closeRankModal(){
 }
 
 function showRankUp(r){
+  playSound('rankup');
   const nameEl=document.getElementById('ruRankName');
   const descEl=document.getElementById('ruRankDesc');
   const labelEl=document.getElementById('ruLabel');
@@ -1376,6 +1379,7 @@ function checkAchievements(){
   if(newA) setTimeout(()=>showAchievement(newA),400);
 }
 function showAchievement(a){
+  playSound('achievement');
   document.getElementById('achEmoji').textContent=a.icon;
   document.getElementById('achModalTitle').textContent='CONQUISTA DESBLOQUEADA!';
   document.getElementById('achModalDesc').textContent=a.name+' — '+a.desc;
@@ -1486,11 +1490,12 @@ function confirmNewWeek(){
   updateStats();
   saveState();
   spawnBurstCenter();
+  playSound('newWeek');
   setTimeout(()=>alert('✅ Semana '+state.currentWeek+' começou!\nBoa sorte, guerreira! 🐉'),300);
 }
 
 // ── DRAGON MODAL ──
-function openDragonModal(){openModal('dragonModal');}
+function openDragonModal(){ playSound('shenlong'); openModal('dragonModal'); }
 function grantWish(){
   const w=document.getElementById('wishInput').value.trim();
   if(!w)return;
@@ -1563,6 +1568,212 @@ function kiBlast(el){
 }
 function genStars(){const c=document.getElementById('stars');for(let i=0;i<100;i++){const s=document.createElement('div');s.className='star';const sz=Math.random()*2.5+.5;s.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--d:${(Math.random()*4+2).toFixed(1)}s;animation-delay:${(Math.random()*6).toFixed(1)}s;`;c.appendChild(s);}}
 function genSparks(){const c=document.getElementById('sparks');const cls=['#FFD700','#FF8C00','#7ECFFF','#cc88ff'];for(let i=0;i<16;i++){const s=document.createElement('div');s.className='spark';const cl=cls[i%cls.length];s.style.cssText=`left:${Math.random()*100}%;background:${cl};box-shadow:0 0 5px ${cl};--d:${(Math.random()*8+5).toFixed(1)}s;--x:${(Math.random()*180-90).toFixed(0)}px;animation-delay:${(Math.random()*10).toFixed(1)}s;`;c.appendChild(s);}}
+
+// ── AUDIO ENGINE ──
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+let _audioCtx = null;
+function getAudioCtx(){
+  if(!_audioCtx) _audioCtx = new AudioCtx();
+  if(_audioCtx.state === 'suspended') _audioCtx.resume();
+  return _audioCtx;
+}
+
+function playSound(type){
+  try {
+    const ac = getAudioCtx();
+    const master = ac.createGain();
+    master.gain.value = 0.35;
+    master.connect(ac.destination);
+
+    const now = ac.currentTime;
+
+    if(type === 'check'){
+      // Marcar atividade — bip cristalino suave
+      const o = ac.createOscillator();
+      const g = ac.createGain();
+      o.connect(g); g.connect(master);
+      o.type = 'sine';
+      o.frequency.setValueAtTime(520, now);
+      o.frequency.exponentialRampToValueAtTime(820, now + 0.08);
+      g.gain.setValueAtTime(0.6, now);
+      g.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+      o.start(now); o.stop(now + 0.25);
+
+    } else if(type === 'uncheck'){
+      // Desmarcar — bip descendente
+      const o = ac.createOscillator();
+      const g = ac.createGain();
+      o.connect(g); g.connect(master);
+      o.type = 'sine';
+      o.frequency.setValueAtTime(520, now);
+      o.frequency.exponentialRampToValueAtTime(320, now + 0.15);
+      g.gain.setValueAtTime(0.4, now);
+      g.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+      o.start(now); o.stop(now + 0.2);
+
+    } else if(type === 'dayComplete'){
+      // Dia completo — fanfarra vitória
+      const notes = [523, 659, 784, 1047];
+      notes.forEach((freq, i) => {
+        const o = ac.createOscillator();
+        const g = ac.createGain();
+        const t = now + i * 0.12;
+        o.connect(g); g.connect(master);
+        o.type = 'triangle';
+        o.frequency.value = freq;
+        g.gain.setValueAtTime(0, t);
+        g.gain.linearRampToValueAtTime(0.7, t + 0.04);
+        g.gain.exponentialRampToValueAtTime(0.001, t + 0.35);
+        o.start(t); o.stop(t + 0.35);
+      });
+      // Acorde final
+      [784, 988, 1175].forEach((freq, i) => {
+        const o = ac.createOscillator();
+        const g = ac.createGain();
+        const t = now + 0.55;
+        o.connect(g); g.connect(master);
+        o.type = 'sine';
+        o.frequency.value = freq;
+        g.gain.setValueAtTime(0.4, t);
+        g.gain.exponentialRampToValueAtTime(0.001, t + 0.6);
+        o.start(t); o.stop(t + 0.6);
+      });
+
+    } else if(type === 'achievement'){
+      // Conquista — som épico de medalha
+      const jingle = [784, 988, 1175, 988, 1175, 1568];
+      jingle.forEach((freq, i) => {
+        const o = ac.createOscillator();
+        const g = ac.createGain();
+        const t = now + i * 0.1;
+        o.connect(g); g.connect(master);
+        o.type = i < 4 ? 'triangle' : 'sine';
+        o.frequency.value = freq;
+        g.gain.setValueAtTime(0, t);
+        g.gain.linearRampToValueAtTime(0.5, t + 0.03);
+        g.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
+        o.start(t); o.stop(t + 0.3);
+      });
+
+    } else if(type === 'rankup'){
+      // Rank up — explosão de energia SSJ épica
+      // Baixo poderoso
+      const bass = ac.createOscillator();
+      const bassG = ac.createGain();
+      bass.connect(bassG); bassG.connect(master);
+      bass.type = 'sawtooth';
+      bass.frequency.setValueAtTime(55, now);
+      bass.frequency.exponentialRampToValueAtTime(110, now + 0.4);
+      bassG.gain.setValueAtTime(0.8, now);
+      bassG.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+      bass.start(now); bass.stop(now + 0.5);
+
+      // Sweep de energia
+      const sweep = ac.createOscillator();
+      const sweepG = ac.createGain();
+      const sweepFilter = ac.createBiquadFilter();
+      sweepFilter.type = 'bandpass';
+      sweepFilter.frequency.setValueAtTime(200, now);
+      sweepFilter.frequency.exponentialRampToValueAtTime(4000, now + 0.8);
+      sweep.connect(sweepFilter); sweepFilter.connect(sweepG); sweepG.connect(master);
+      sweep.type = 'sawtooth';
+      sweep.frequency.setValueAtTime(110, now);
+      sweep.frequency.exponentialRampToValueAtTime(880, now + 0.8);
+      sweepG.gain.setValueAtTime(0.6, now + 0.1);
+      sweepG.gain.exponentialRampToValueAtTime(0.001, now + 0.9);
+      sweep.start(now + 0.1); sweep.stop(now + 0.9);
+
+      // Notas heroicas
+      const heroNotes = [392, 494, 587, 784, 988, 1175, 1568];
+      heroNotes.forEach((freq, i) => {
+        const o = ac.createOscillator();
+        const g = ac.createGain();
+        const t = now + 0.5 + i * 0.09;
+        o.connect(g); g.connect(master);
+        o.type = 'square';
+        o.frequency.value = freq;
+        g.gain.setValueAtTime(0, t);
+        g.gain.linearRampToValueAtTime(0.35, t + 0.02);
+        g.gain.exponentialRampToValueAtTime(0.001, t + 0.25);
+        o.start(t); o.stop(t + 0.25);
+      });
+
+      // Acorde final poderoso
+      [587, 740, 880, 1175].forEach((freq) => {
+        const o = ac.createOscillator();
+        const g = ac.createGain();
+        const t = now + 1.2;
+        o.connect(g); g.connect(master);
+        o.type = 'sine';
+        o.frequency.value = freq;
+        g.gain.setValueAtTime(0.45, t);
+        g.gain.exponentialRampToValueAtTime(0.001, t + 1.0);
+        o.start(t); o.stop(t + 1.0);
+      });
+
+    } else if(type === 'sphere'){
+      // Ganhou uma esfera — som mágico/místico
+      const o = ac.createOscillator();
+      const g = ac.createGain();
+      const vib = ac.createOscillator();
+      const vibG = ac.createGain();
+      vib.frequency.value = 6;
+      vibG.gain.value = 8;
+      vib.connect(vibG); vibG.connect(o.frequency);
+      o.connect(g); g.connect(master);
+      o.type = 'sine';
+      o.frequency.setValueAtTime(440, now);
+      o.frequency.exponentialRampToValueAtTime(880, now + 0.4);
+      g.gain.setValueAtTime(0, now);
+      g.gain.linearRampToValueAtTime(0.6, now + 0.05);
+      g.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
+      vib.start(now); vib.stop(now + 0.6);
+      o.start(now); o.stop(now + 0.6);
+
+    } else if(type === 'shenlong'){
+      // Shenlong invocado — som épico/dramático
+      const rumble = ac.createOscillator();
+      const rumbleG = ac.createGain();
+      rumble.connect(rumbleG); rumbleG.connect(master);
+      rumble.type = 'sawtooth';
+      rumble.frequency.setValueAtTime(40, now);
+      rumble.frequency.exponentialRampToValueAtTime(80, now + 1.5);
+      rumbleG.gain.setValueAtTime(0.7, now);
+      rumbleG.gain.exponentialRampToValueAtTime(0.001, now + 1.5);
+      rumble.start(now); rumble.stop(now + 1.5);
+
+      // Notas místicas ascendentes
+      [220, 277, 330, 440, 554, 659, 880].forEach((freq, i) => {
+        const o = ac.createOscillator();
+        const g = ac.createGain();
+        const t = now + 0.3 + i * 0.15;
+        o.connect(g); g.connect(master);
+        o.type = 'sine';
+        o.frequency.value = freq;
+        g.gain.setValueAtTime(0.4, t);
+        g.gain.exponentialRampToValueAtTime(0.001, t + 0.5);
+        o.start(t); o.stop(t + 0.5);
+      });
+
+    } else if(type === 'newWeek'){
+      // Nova semana — som de recomeço/esperança
+      const chime = [523, 659, 784, 1047, 784, 1047, 1319];
+      chime.forEach((freq, i) => {
+        const o = ac.createOscillator();
+        const g = ac.createGain();
+        const t = now + i * 0.14;
+        o.connect(g); g.connect(master);
+        o.type = 'sine';
+        o.frequency.value = freq;
+        g.gain.setValueAtTime(0, t);
+        g.gain.linearRampToValueAtTime(0.45, t + 0.02);
+        g.gain.exponentialRampToValueAtTime(0.001, t + 0.5);
+        o.start(t); o.stop(t + 0.5);
+      });
+    }
+
+  } catch(e) { /* audio não disponível */ }
+}
 
 // ── AUTO DIA ATUAL — roda depois de tudo definido ──
 (function(){
