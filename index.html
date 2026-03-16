@@ -68,7 +68,8 @@ body{background:var(--dark);font-family:'Nunito',sans-serif;min-height:100vh;ove
 .stat-label{font-family:'Bangers',cursive;font-size:.78rem;letter-spacing:2px;color:rgba(255,255,255,.45);margin-bottom:3px;}
 .stat-value{font-family:'Bangers',cursive;font-size:1.9rem;color:var(--gold);text-shadow:0 0 14px rgba(255,215,0,.5);}
 .stat-sub{font-size:.68rem;color:rgba(255,255,255,.35);margin-top:2px;}
-.streak-value.on{color:#FF6B00;text-shadow:0 0 20px #FF4500;}
+.wdot{font-size:1.1rem;transition:all .3s;color:rgba(255,255,255,.2);}
+.wdot.done{color:#FFD700;text-shadow:0 0 8px #FFD700;}
 .flame{display:inline-block;animation:flameWig .4s ease-in-out infinite alternate;}
 @keyframes flameWig{from{transform:rotate(-8deg)}to{transform:rotate(8deg) scale(1.1)}}
 .power-track{height:7px;background:rgba(255,255,255,.08);border-radius:4px;margin-top:5px;overflow:hidden;border:1px solid rgba(255,255,255,.06);}
@@ -302,9 +303,16 @@ body{background:var(--dark);font-family:'Nunito',sans-serif;min-height:100vh;ove
     <div class="stat-sub">de 10 medalhas</div>
   </div>
   <div class="stat-card">
-    <div class="stat-label">⭐ EXTRAS</div>
-    <div class="stat-value" id="extraVal">0</div>
-    <div class="stat-sub">tarefas bônus</div>
+    <div class="stat-label">📅 SEMANA</div>
+    <div class="stat-value" id="weekVal">2</div>
+    <div id="weekDots" style="display:flex;gap:5px;justify-content:center;margin:4px 0;">
+      <span class="wdot" data-day="segunda">○</span>
+      <span class="wdot" data-day="terca">○</span>
+      <span class="wdot" data-day="quarta">○</span>
+      <span class="wdot" data-day="quinta">○</span>
+      <span class="wdot" data-day="sexta">○</span>
+    </div>
+    <div class="stat-sub" id="weekSub">0 de 5 dias</div>
   </div>
 </div>
 
@@ -316,7 +324,7 @@ body{background:var(--dark);font-family:'Nunito',sans-serif;min-height:100vh;ove
     <button class="day-tab" id="tab-quarta" onclick="showDay('quarta',this)">💥 Quarta</button>
     <button class="day-tab" id="tab-quinta" onclick="showDay('quinta',this)">🔥 Quinta</button>
     <button class="day-tab" id="tab-sexta" onclick="showDay('sexta',this)">🐉 Sexta</button>
-    <button class="day-tab extras-tab" onclick="showDay('extras',this)">⭐ Extras</button>
+    <button class="day-tab extras-tab" onclick="showDay('extras',this)">📅 Histórico</button>
   </div>
 
   <!-- SEGUNDA -->
@@ -526,16 +534,15 @@ body{background:var(--dark);font-family:'Nunito',sans-serif;min-height:100vh;ove
     </div>
   </div>
 
-  <!-- EXTRAS -->
+  <!-- HISTÓRICO -->
   <div class="day-panel" id="day-extras">
     <div class="extras-header">
-      <div class="extras-title">⭐ EXTRAS ⭐</div>
-      <div class="extras-desc">Role para baixo para ver o histórico do mês e iniciar nova semana 📅</div>
+      <div class="extras-title">📅 HISTÓRICO DO MÊS 📅</div>
+      <div class="extras-desc">Semanas concluídas em <span id="currentMonthLabel"></span></div>
     </div>
-    <div style="text-align:center;padding:30px 0;">
-      <div style="font-size:3rem;margin-bottom:12px;">📅</div>
-      <div style="font-family:'Bangers',cursive;font-size:1.2rem;color:var(--gold);letter-spacing:3px;">HISTÓRICO NA TELA PRINCIPAL</div>
-      <div style="color:rgba(255,255,255,.45);font-size:.85rem;margin-top:8px;">Role para baixo, abaixo das conquistas!</div>
+    <div id="weekHistoryGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-bottom:20px;"></div>
+    <div style="text-align:center;margin-bottom:10px;">
+      <button onclick="confirmNewWeek()" style="padding:12px 30px;border-radius:14px;border:2px solid rgba(255,107,0,.5);background:linear-gradient(135deg,rgba(100,20,0,.6),rgba(180,50,0,.4));color:#FF8C00;font-family:'Bangers',cursive;font-size:1.1rem;letter-spacing:2px;cursor:pointer;box-shadow:0 0 16px rgba(255,107,0,.2);">🔄 SALVAR E INICIAR NOVA SEMANA</button>
     </div>
   </div>
 </div>
@@ -544,15 +551,6 @@ body{background:var(--dark);font-family:'Nunito',sans-serif;min-height:100vh;ove
 <div class="achievements-section">
   <div class="section-title">🏅 CONQUISTAS 🏅</div>
   <div class="achievements-grid" id="achGrid"></div>
-</div>
-
-<!-- HISTÓRICO DO MÊS -->
-<div class="achievements-section" style="padding-top:0;">
-  <div class="section-title">📅 HISTÓRICO DO MÊS 📅</div>
-  <div id="weekHistoryGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-bottom:16px;"></div>
-  <div style="text-align:center;margin-bottom:30px;">
-    <button onclick="confirmNewWeek()" style="padding:11px 28px;border-radius:14px;border:2px solid rgba(255,107,0,.5);background:linear-gradient(135deg,rgba(100,20,0,.6),rgba(180,50,0,.4));color:#FF8C00;font-family:'Bangers',cursive;font-size:1.05rem;letter-spacing:2px;cursor:pointer;box-shadow:0 0 16px rgba(255,107,0,.2);">🔄 SALVAR E INICIAR NOVA SEMANA</button>
-  </div>
 </div>
 
 <!-- MODALS -->
@@ -957,6 +955,18 @@ function updateStats(){
   document.getElementById('powerFill').style.background=`linear-gradient(90deg,${r.color},#FFD700)`;
   if(rankExibido>prevRank && semanaCompleta) showRankUp(r);
   document.getElementById('achVal').textContent=state.unlockedAch.size;
+
+  // Card semana
+  const WEEK_DAYS2=['segunda','terca','quarta','quinta','sexta'];
+  const daysCount = WEEK_DAYS2.filter(d=>state.completedDays[d]===true).length;
+  document.getElementById('weekVal').textContent = 'Sem '+state.currentWeek;
+  document.getElementById('weekVal').style.fontSize = '1.2rem';
+  document.getElementById('weekSub').textContent = daysCount+' de 5 dias';
+  document.querySelectorAll('.wdot').forEach(dot => {
+    const day = dot.dataset.day;
+    dot.textContent = state.completedDays[day] ? '⬤' : '○';
+    dot.classList.toggle('done', !!state.completedDays[day]);
+  });
 }
 
 function showRankUp(r){
@@ -1005,6 +1015,10 @@ function renderWeekHistory(){
     state.currentWeek = 1;
     state.currentMonth = currentMonth;
   }
+
+  const monthNames = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  const label = document.getElementById('currentMonthLabel');
+  if(label) label.textContent = monthNames[new Date().getMonth()];
 
   if(state.weekHistory.length === 0){
     g.innerHTML = '<div style="text-align:center;color:rgba(255,255,255,.4);font-family:\'Bangers\',cursive;font-size:1rem;letter-spacing:2px;padding:20px;grid-column:1/-1;">Nenhuma semana concluída ainda.<br>Complete a semana e clique em salvar! 🐉</div>';
