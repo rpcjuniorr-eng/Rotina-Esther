@@ -748,11 +748,11 @@ body{background:var(--dark);font-family:'Nunito',sans-serif;min-height:100vh;ove
     </div>
 
     <!-- Texto bottom -->
-    <div style="position:fixed;bottom:0;left:0;right:0;z-index:5;text-align:center;padding:20px 20px 36px;background:linear-gradient(transparent,rgba(0,0,0,.85) 30%);">
-      <div id="ruLabel" style="font-family:'Bangers',cursive;font-size:.9rem;letter-spacing:5px;color:rgba(255,255,255,.5);opacity:0;transition:opacity .6s;">TRANSFORMAÇÃO COMPLETA</div>
-      <div id="ruRankName" style="font-family:'Bangers',cursive;font-size:3rem;letter-spacing:5px;line-height:1.1;margin:4px 0;opacity:0;transition:opacity .6s,text-shadow .6s;">RANK UP!</div>
-      <div id="ruRankDesc" style="font-size:.88rem;color:rgba(255,255,255,.6);font-weight:700;margin-bottom:14px;opacity:0;transition:opacity .5s;"></div>
-      <button id="ruBtn" class="modal-btn" onclick="closeRankModal()" style="opacity:0;transition:opacity .5s;background:linear-gradient(135deg,#aa6600,#FFD700);color:#000;font-size:1.05rem;letter-spacing:3px;">⚡ INCRÍVEL! ⚡</button>
+    <div style="position:fixed;bottom:0;left:0;right:0;z-index:5;text-align:center;padding:16px 20px 38px;background:linear-gradient(transparent,rgba(0,0,0,.92) 25%,rgba(0,0,0,.98));">
+      <div id="ruLabel" style="font-family:'Bangers',cursive;font-size:.85rem;letter-spacing:5px;color:rgba(255,255,255,.5);opacity:0;transition:opacity .6s;margin-bottom:2px;">TRANSFORMAÇÃO COMPLETA</div>
+      <div id="ruRankName" style="font-family:'Bangers',cursive;font-size:2.8rem;letter-spacing:5px;line-height:1.1;margin:4px auto;opacity:0;transition:opacity .6s,text-shadow .6s;display:block;width:100%;">RANK UP!</div>
+      <div id="ruRankDesc" style="font-size:.85rem;color:rgba(255,255,255,.55);font-weight:700;margin:6px auto 14px;opacity:0;transition:opacity .5s;">Parabéns!</div>
+      <button id="ruBtn" class="modal-btn" onclick="closeRankModal()" style="opacity:0;transition:opacity .5s;background:linear-gradient(135deg,#aa6600,#FFD700);color:#000;font-size:1rem;letter-spacing:3px;display:block;margin:0 auto;">⚡ INCRÍVEL! ⚡</button>
     </div>
   </div>
 </div>
@@ -888,11 +888,11 @@ function triggerCelebration(day) {
 }
 
 // ── SAVE/LOAD ──
-const SAVE_KEY = 'rotina_esther_v6';
+const SAVE_KEY = 'rotina_esther_v7';
 
 function saveState() {
   try {
-    localStorage.setItem(SAVE_KEY, JSON.stringify({
+    const data = {
       power: state.power,
       powerExtra: state.powerExtra,
       streak: state.streak,
@@ -909,13 +909,20 @@ function saveState() {
       currentWeek: state.currentWeek,
       currentMonth: state.currentMonth,
       checkedItems: getCheckedMap(),
-    }));
-  } catch(e) {}
+    };
+    const json = JSON.stringify(data);
+    localStorage.setItem(SAVE_KEY, json);
+    // Verifica se salvou corretamente
+    const verify = localStorage.getItem(SAVE_KEY);
+    if (!verify) console.error('Save falhou: localStorage vazio após set');
+  } catch(e) {
+    console.error('Erro ao salvar:', e);
+  }
 }
 
 function loadSaved() {
   try {
-    ['rotina_esther_v1','rotina_esther_v2','rotina_esther_v3','rotina_esther_v4','rotina_esther_v5'].forEach(k=>localStorage.removeItem(k));
+    ['rotina_esther_v1','rotina_esther_v2','rotina_esther_v3','rotina_esther_v4','rotina_esther_v5','rotina_esther_v6'].forEach(k=>localStorage.removeItem(k));
     const raw = localStorage.getItem(SAVE_KEY);
     return raw ? JSON.parse(raw) : null;
   } catch(e) { return null; }
@@ -1192,7 +1199,7 @@ function showRankUp(r){
   // Phases: 0=orbit(60f) 1=charge(50f) 2=flash(30f) 3=ssj(80f) 4=done
   let phase=0, pt=0;
   let balls=Array.from({length:7},(_,i)=>({
-    a:(i/7)*Math.PI*2, orbitR:155*sc, size:13*sc,
+    i:i+1, a:(i/7)*Math.PI*2, orbitR:155*sc, size:13*sc,
     exploded:false, x:0, y:0, vx:0, vy:0, alpha:1
   }));
   let particles=[];
@@ -1288,18 +1295,17 @@ function showRankUp(r){
     balls.forEach(b=>{
       if(b.exploded){
         b.x+=b.vx; b.y+=b.vy; b.vy+=.35*sc; b.vx*=.98; b.alpha*=.955;
-        if(b.alpha>.04) drawBall(b.x,b.y,b.size*b.alpha,b.i+1||1);
+        if(b.alpha>.04) drawBall(b.x,b.y,b.size*b.alpha,b.i);
       } else {
         b.a+=orbitSpeed;
         const rr=phase===1?lerp(155,55,ease(pt/50))*sc:155*sc;
         b.x=cx+Math.cos(b.a)*rr;
         b.y=cy+Math.sin(b.a)*rr*.38+15*sc;
-        drawBall(b.x,b.y,b.size,_=>0,1);
+        drawBall(b.x,b.y,b.size,b.i);
         if(phase===2&&pt===1){
           b.exploded=true;
           b.vx=(b.x-cx)*.14+(Math.random()-.5)*4*sc;
           b.vy=(b.y-cy)*.14-7*sc;
-          b.i=balls.indexOf(b);
         }
       }
     });
