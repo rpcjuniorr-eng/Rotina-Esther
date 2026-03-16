@@ -930,19 +930,10 @@ function updateStats(){
   sv.classList.toggle('on',state.streak>0);
   document.getElementById('sphereVal').innerHTML=state.spheres+' <span style="font-size:.85rem;color:rgba(255,255,255,.35)">/7</span>';
 
-  // Rank só sobe quando todos os 5 dias estiverem 100% completos
-  const WEEK_DAYS=['segunda','terca','quarta','quinta','sexta'];
-  const semanaCompleta = WEEK_DAYS.every(d=>state.completedDays[d]===true);
+  // Rank baseado nos pontos obrigatórios (state.power), nunca regride
   const prevRank = state.rank;
-
-  // Calcula qual rank os pontos dariam
   let ri=0; RANKS.forEach((r,i)=>{if(state.power>=r.min)ri=i;});
-
-  // Rank só sobe se semana COMPLETA. Nunca regride.
-  if(semanaCompleta) {
-    state.rank = Math.max(state.rank, ri);
-  }
-  // Sempre exibe o rank já conquistado
+  state.rank = Math.max(state.rank, ri);
   const rankExibido = state.rank;
 
   const r=RANKS[rankExibido], nextR=RANKS[rankExibido+1];
@@ -955,7 +946,7 @@ function updateStats(){
   document.getElementById('rankNext').textContent=nextR?`faltam ${Math.max(0,nextR.min-state.power)} pts para ${nextR.name}`:'🌟 Rank Máximo!';
   document.getElementById('powerFill').style.width=Math.min(100,pct)+'%';
   document.getElementById('powerFill').style.background=`linear-gradient(90deg,${r.color},#FFD700)`;
-  if(rankExibido>prevRank && semanaCompleta) showRankUp(r);
+  if(rankExibido>prevRank) showRankUp(r);
   document.getElementById('achVal').textContent=state.unlockedAch.size;
 
   // Card semana
@@ -1201,4 +1192,4 @@ function genSparks(){const c=document.getElementById('sparks');const cls=['#FFD7
 })();
 </script>
 </body>
-</html>
+                                                  </html>
