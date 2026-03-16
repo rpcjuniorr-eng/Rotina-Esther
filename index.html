@@ -311,11 +311,11 @@ body{background:var(--dark);font-family:'Nunito',sans-serif;min-height:100vh;ove
 <!-- CONTAINER -->
 <div class="container">
   <div class="tab-row">
-    <button class="day-tab active" onclick="showDay('segunda',this)">⚔️ Segunda</button>
-    <button class="day-tab" onclick="showDay('terca',this)">🌟 Terça</button>
-    <button class="day-tab" onclick="showDay('quarta',this)">💥 Quarta</button>
-    <button class="day-tab" onclick="showDay('quinta',this)">🔥 Quinta</button>
-    <button class="day-tab" onclick="showDay('sexta',this)">🐉 Sexta</button>
+    <button class="day-tab active" id="tab-segunda" onclick="showDay('segunda',this)">⚔️ Segunda</button>
+    <button class="day-tab" id="tab-terca" onclick="showDay('terca',this)">🌟 Terça</button>
+    <button class="day-tab" id="tab-quarta" onclick="showDay('quarta',this)">💥 Quarta</button>
+    <button class="day-tab" id="tab-quinta" onclick="showDay('quinta',this)">🔥 Quinta</button>
+    <button class="day-tab" id="tab-sexta" onclick="showDay('sexta',this)">🐉 Sexta</button>
     <button class="day-tab extras-tab" onclick="showDay('extras',this)">⭐ Extras</button>
   </div>
 
@@ -343,10 +343,13 @@ body{background:var(--dark);font-family:'Nunito',sans-serif;min-height:100vh;ove
         <div class="activity-item" data-pts="3"><span class="activity-emoji">🌬️</span><span class="activity-name">Lavar nariz</span><span class="activity-pts">+3⚡</span><div class="activity-check"></div></div>
         <div class="activity-item" data-pts="3"><span class="activity-emoji">😴</span><span class="activity-name">Dormir</span><span class="activity-pts">+3⚡</span><div class="activity-check"></div></div>
       </div></div>
+      <div class="activity-card card-extra" style="animation-delay:.3s"><div class="card-glow"></div><div class="card-time">Qualquer hora <span class="flex-badge">flexível</span></div><div class="card-activities">
+        <div class="activity-item" data-pts="4"><span class="activity-emoji">💧</span><span class="activity-name">Encher as garrafas de água</span><span class="activity-pts">+4⚡</span><div class="activity-check"></div></div>
+        <div class="activity-item" data-pts="4"><span class="activity-emoji">🗑️</span><span class="activity-name">Jogar o lixo</span><span class="activity-pts">+4⚡</span><div class="activity-check"></div></div>
+        <div class="activity-item" data-pts="6"><span class="activity-emoji">👗</span><span class="activity-name">Organizar guarda-roupa</span><span class="activity-pts">+6⚡</span><div class="activity-check"></div></div>
+      </div></div>
     </div>
   </div>
-
-  <!-- TERÇA -->
   <div class="day-panel" id="day-terca">
     <div class="day-progress"><span class="day-progress-label">⚡ KI</span><div class="day-progress-track"><div class="day-progress-fill" id="fill-terca"></div></div><span class="day-progress-count" id="count-terca">0/0</span></div>
     <div class="day-header"><div class="day-title">🌟 Terça-Feira 🌟</div></div>
@@ -391,6 +394,10 @@ body{background:var(--dark);font-family:'Nunito',sans-serif;min-height:100vh;ove
         <div class="activity-item" data-pts="3"><span class="activity-emoji">🌬️</span><span class="activity-name">Lavar nariz</span><span class="activity-pts">+3⚡</span><div class="activity-check"></div></div>
         <div class="activity-item" data-pts="3"><span class="activity-emoji">😴</span><span class="activity-name">Dormir</span><span class="activity-pts">+3⚡</span><div class="activity-check"></div></div>
       </div></div>
+      <div class="activity-card card-extra" style="animation-delay:.55s"><div class="card-glow"></div><div class="card-time">Qualquer hora <span class="flex-badge">flexível</span></div><div class="card-activities">
+        <div class="activity-item" data-pts="4"><span class="activity-emoji">💧</span><span class="activity-name">Encher as garrafas de água</span><span class="activity-pts">+4⚡</span><div class="activity-check"></div></div>
+        <div class="activity-item" data-pts="4"><span class="activity-emoji">🗑️</span><span class="activity-name">Jogar o lixo</span><span class="activity-pts">+4⚡</span><div class="activity-check"></div></div>
+      </div></div>
     </div>
   </div>
 
@@ -426,6 +433,10 @@ body{background:var(--dark);font-family:'Nunito',sans-serif;min-height:100vh;ove
         <div class="activity-item" data-pts="3"><span class="activity-emoji">🦷</span><span class="activity-name">Escovar dente</span><span class="activity-pts">+3⚡</span><div class="activity-check"></div></div>
         <div class="activity-item" data-pts="3"><span class="activity-emoji">🌬️</span><span class="activity-name">Lavar nariz</span><span class="activity-pts">+3⚡</span><div class="activity-check"></div></div>
         <div class="activity-item" data-pts="3"><span class="activity-emoji">😴</span><span class="activity-name">Dormir</span><span class="activity-pts">+3⚡</span><div class="activity-check"></div></div>
+      </div></div>
+      <div class="activity-card card-extra" style="animation-delay:.4s"><div class="card-glow"></div><div class="card-time">Qualquer hora <span class="flex-badge">flexível</span></div><div class="card-activities">
+        <div class="activity-item" data-pts="4"><span class="activity-emoji">💧</span><span class="activity-name">Encher as garrafas de água</span><span class="activity-pts">+4⚡</span><div class="activity-check"></div></div>
+        <div class="activity-item" data-pts="4"><span class="activity-emoji">🗑️</span><span class="activity-name">Jogar o lixo</span><span class="activity-pts">+4⚡</span><div class="activity-check"></div></div>
       </div></div>
     </div>
   </div>
@@ -475,6 +486,10 @@ body{background:var(--dark);font-family:'Nunito',sans-serif;min-height:100vh;ove
         <div class="activity-item" data-pts="3"><span class="activity-emoji">🌬️</span><span class="activity-name">Lavar nariz</span><span class="activity-pts">+3⚡</span><div class="activity-check"></div></div>
         <div class="activity-item" data-pts="3"><span class="activity-emoji">😴</span><span class="activity-name">Dormir</span><span class="activity-pts">+3⚡</span><div class="activity-check"></div></div>
       </div></div>
+      <div class="activity-card card-extra" style="animation-delay:.55s"><div class="card-glow"></div><div class="card-time">Qualquer hora <span class="flex-badge">flexível</span></div><div class="card-activities">
+        <div class="activity-item" data-pts="4"><span class="activity-emoji">💧</span><span class="activity-name">Encher as garrafas de água</span><span class="activity-pts">+4⚡</span><div class="activity-check"></div></div>
+        <div class="activity-item" data-pts="4"><span class="activity-emoji">🗑️</span><span class="activity-name">Jogar o lixo</span><span class="activity-pts">+4⚡</span><div class="activity-check"></div></div>
+      </div></div>
     </div>
   </div>
 
@@ -495,6 +510,10 @@ body{background:var(--dark);font-family:'Nunito',sans-serif;min-height:100vh;ove
       <div class="activity-card card-read" style="animation-delay:.15s"><div class="card-glow"></div><div class="card-time">Horário Livre <span class="flex-badge">flexível</span></div><div class="card-activities">
         <div class="activity-item" data-pts="5"><span class="activity-emoji">📖</span><span class="activity-name">Leitura (5–10 páginas)</span><span class="activity-pts">+5⚡</span><div class="activity-check"></div></div>
       </div></div>
+      <div class="activity-card card-extra" style="animation-delay:.2s"><div class="card-glow"></div><div class="card-time">Qualquer hora <span class="flex-badge">flexível</span></div><div class="card-activities">
+        <div class="activity-item" data-pts="4"><span class="activity-emoji">💧</span><span class="activity-name">Encher as garrafas de água</span><span class="activity-pts">+4⚡</span><div class="activity-check"></div></div>
+        <div class="activity-item" data-pts="4"><span class="activity-emoji">🗑️</span><span class="activity-name">Jogar o lixo</span><span class="activity-pts">+4⚡</span><div class="activity-check"></div></div>
+      </div></div>
     </div>
     <div style="text-align:center;margin-top:20px;">
       <div style="display:inline-block;padding:12px 24px;border-radius:16px;background:linear-gradient(135deg,#1a3a7a,#0d1b3e);border:2px solid var(--gold);box-shadow:0 0 24px rgba(255,215,0,.3);">
@@ -502,20 +521,20 @@ body{background:var(--dark);font-family:'Nunito',sans-serif;min-height:100vh;ove
         <div style="color:rgba(255,255,255,.55);font-size:.82rem;margin-top:3px;font-weight:700;">Hora de descansar, guerreira! ⚡</div>
       </div>
     </div>
+    <div style="text-align:center;margin-top:16px;">
+      <button onclick="confirmNewWeek()" style="padding:10px 24px;border-radius:12px;border:2px solid rgba(255,107,0,.5);background:linear-gradient(135deg,rgba(100,20,0,.6),rgba(180,50,0,.4));color:#FF8C00;font-family:'Bangers',cursive;font-size:1rem;letter-spacing:2px;cursor:pointer;">🔄 SALVAR E INICIAR NOVA SEMANA</button>
+    </div>
   </div>
 
   <!-- EXTRAS -->
   <div class="day-panel" id="day-extras">
     <div class="extras-header">
-      <div class="extras-title">⭐ TAREFAS EXTRAS ⭐</div>
-      <div class="extras-desc">Complete por 2 semanas seguidas e ganhe uma recompensa surpresa! 🎁<br>Cada tarefa extra vale <strong style="color:var(--gold)">+8⚡</strong> por semana concluída.</div>
+      <div class="extras-title">📅 HISTÓRICO DO MÊS</div>
+      <div class="extras-desc">Registro das semanas concluídas este mês</div>
     </div>
-    <div class="extras-grid" id="extrasGrid"></div>
-    <div class="biweekly-section">
-      <div class="biweekly-title">🗓️ PROGRESSO QUINZENAL</div>
-      <div style="color:rgba(255,255,255,.45);font-size:.8rem;margin-bottom:6px;">Complete todas as extras por 2 semanas = 🎁 Bônus Surpresa!</div>
-      <div class="biweekly-weeks" id="biweeklyWeeks"></div>
-      <div class="biweekly-note" id="biweeklyNote">Complete todas as extras numa semana para marcar! ✨</div>
+    <div id="weekHistoryGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-bottom:20px;"></div>
+    <div style="text-align:center;margin-top:8px;">
+      <button onclick="confirmNewWeek()" style="padding:10px 24px;border-radius:12px;border:2px solid rgba(255,107,0,.5);background:linear-gradient(135deg,rgba(100,20,0,.6),rgba(180,50,0,.4));color:#FF8C00;font-family:'Bangers',cursive;font-size:1rem;letter-spacing:2px;cursor:pointer;">🔄 SALVAR E INICIAR NOVA SEMANA</button>
     </div>
   </div>
 </div>
@@ -678,7 +697,7 @@ function triggerCelebration(day) {
 }
 
 // ── SAVE/LOAD ──
-const SAVE_KEY = 'rotina_esther_v5';
+const SAVE_KEY = 'rotina_esther_v6';
 
 function saveState() {
   try {
@@ -694,7 +713,9 @@ function saveState() {
       readings: state.readings,
       completedDays: state.completedDays,
       unlockedAch: [...state.unlockedAch],
-      extraWeeks: state.extraWeeks,
+      weekHistory: state.weekHistory,
+      currentWeek: state.currentWeek,
+      currentMonth: state.currentMonth,
       checkedItems: getCheckedMap(),
     }));
   } catch(e) {}
@@ -702,8 +723,7 @@ function saveState() {
 
 function loadSaved() {
   try {
-    // Limpa versões antigas automaticamente
-    ['rotina_esther_v1','rotina_esther_v2','rotina_esther_v3','rotina_esther_v4'].forEach(k=>localStorage.removeItem(k));
+    ['rotina_esther_v1','rotina_esther_v2','rotina_esther_v3','rotina_esther_v4','rotina_esther_v5'].forEach(k=>localStorage.removeItem(k));
     const raw = localStorage.getItem(SAVE_KEY);
     return raw ? JSON.parse(raw) : null;
   } catch(e) { return null; }
@@ -760,7 +780,9 @@ const state = {
   power:0, streak:0, spheres:0, rank:0,
   totalDone:0, baths:0, schoolDays:0, meditations:0, readings:0,
   completedDays:{}, unlockedAch:new Set(),
-  extraWeeks:{water:[],trash:[],closet:[]},
+  weekHistory:[], // [{week:1, days:5, pts:225, month:'Mar'}, ...]
+  currentWeek:1,
+  currentMonth:'',
 };
 
 // ── INIT ──
@@ -779,10 +801,12 @@ if (saved) {
   state.readings    = saved.readings    || 0;
   state.completedDays = saved.completedDays || {};
   state.unlockedAch   = new Set(saved.unlockedAch || []);
-  state.extraWeeks    = saved.extraWeeks || {water:[],trash:[],closet:[]};
+  state.weekHistory   = saved.weekHistory || [];
+  state.currentWeek   = saved.currentWeek || 1;
+  state.currentMonth  = saved.currentMonth || '';
 }
 
-renderExtras(); renderBiweekly(); renderAchievements();
+renderWeekHistory(); renderAchievements();
 
 document.querySelectorAll('.day-panel:not(#day-extras)').forEach(panel => {
   const day = panel.id.replace('day-','');
@@ -809,29 +833,22 @@ document.querySelectorAll('.day-panel:not(#day-extras)').forEach(panel => {
   }
 });
 
-// Primeiro acesso: recalcula tudo do DOM
+// Primeiro acesso: começa com semana 1 já no histórico, semana 2 zerada
 if (!saved) {
-  state.power=0; state.totalDone=0; state.baths=0;
-  state.schoolDays=0; state.meditations=0; state.readings=0;
-  document.querySelectorAll('.day-panel:not(#day-extras) .activity-item.done').forEach(it=>{
-    const pts=parseInt(it.dataset.pts||3);
-    state.power+=pts; state.totalDone++;
-    const n=it.querySelector('.activity-name').textContent;
-    if(n.includes('Banho'))     state.baths++;
-    if(n.includes('Escola'))    state.schoolDays++;
-    if(n.includes('Meditação')) state.meditations++;
-    if(n.includes('Leitura'))   state.readings++;
-  });
-  const WD=['segunda','terca','quarta','quinta','sexta'];
-  document.querySelectorAll('.day-panel:not(#day-extras)').forEach(panel => {
-    const day=panel.id.replace('day-','');
-    const items=panel.querySelectorAll('.activity-item');
-    const done=panel.querySelectorAll('.activity-item.done');
-    state.completedDays[day]=items.length>0&&done.length===items.length;
-  });
-  state.spheres=WD.filter(d=>state.completedDays[d]===true).length;
-  let s=0; for(const d of WD){if(state.completedDays[d]===true)s++;else break;}
-  state.streak=s;
+  const months = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  const currentMonth = months[new Date().getMonth()];
+  state.weekHistory = [{week:1, days:5, pts:225, month:currentMonth}];
+  state.currentWeek = 2;
+  state.currentMonth = currentMonth;
+  state.power = 0;
+  state.totalDone = 0;
+  state.baths = 0;
+  state.schoolDays = 0;
+  state.meditations = 0;
+  state.readings = 0;
+  state.completedDays = {};
+  state.spheres = 0;
+  state.streak = 0;
   saveState();
 }
 
@@ -923,8 +940,6 @@ function updateStats(){
   document.getElementById('powerFill').style.background=`linear-gradient(90deg,${r.color},#FFD700)`;
   if(rankExibido>prevRank && semanaCompleta) showRankUp(r);
   document.getElementById('achVal').textContent=state.unlockedAch.size;
-  const totalExtra=Object.values(state.extraWeeks).flat().filter(Boolean).length;
-  document.getElementById('extraVal').textContent=totalExtra;
 }
 
 function showRankUp(r){
@@ -960,57 +975,98 @@ function showAchievement(a){
   openModal('achModal');
 }
 
-// ── EXTRAS ──
-function renderExtras(){
-  const g=document.getElementById('extrasGrid'); g.innerHTML='';
-  EXTRA_TASKS.forEach((task,ti)=>{
-    const weeks=state.extraWeeks[task.id]||[];
-    const done=weeks.filter(Boolean).length;
-    let checks='';
-    for(let w=0;w<task.weeks;w++) checks+=`<div class="week-check${weeks[w]?' done':''}" onclick="toggleExtraWeek('${task.id}',${w})">${weeks[w]?'✓':''} Sem ${w+1}</div>`;
-    const card=document.createElement('div');
-    card.className='extra-card'; card.style.animationDelay=(ti*.1)+'s';
-    card.innerHTML=`<span class="extra-card-icon">${task.icon}</span><div class="extra-card-name">${task.name}</div><div class="extra-card-desc">${task.desc}</div><div class="extra-check-row">${checks}</div><div class="extra-progress-bar"><div class="extra-progress-fill" style="width:${done/task.weeks*100}%"></div></div><div class="bonus-hint">+8⚡ por semana concluída</div>`;
+// ── HISTÓRICO SEMANAL ──
+function renderWeekHistory(){
+  const g = document.getElementById('weekHistoryGrid');
+  if(!g) return;
+  g.innerHTML = '';
+  const months = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  const currentMonth = months[new Date().getMonth()];
+
+  // Atualiza mês atual se necessário
+  if(!state.currentMonth) state.currentMonth = currentMonth;
+
+  // Se virou o mês, zera o histórico
+  if(state.currentMonth !== currentMonth) {
+    state.weekHistory = [];
+    state.currentWeek = 1;
+    state.currentMonth = currentMonth;
+  }
+
+  if(state.weekHistory.length === 0){
+    g.innerHTML = '<div style="text-align:center;color:rgba(255,255,255,.4);font-family:\'Bangers\',cursive;font-size:1rem;letter-spacing:2px;padding:20px;grid-column:1/-1;">Nenhuma semana concluída ainda.<br>Complete a semana e clique em salvar! 🐉</div>';
+    return;
+  }
+
+  state.weekHistory.forEach((wk, i) => {
+    const allDays = wk.days >= 5;
+    const card = document.createElement('div');
+    card.style.cssText = `border-radius:16px;padding:16px;background:linear-gradient(135deg,${allDays?'#0a3a1a,#1a6030':'#1a1a0a,#3a3010'});border:2px solid ${allDays?'#00e676':'rgba(255,215,0,.3)'};box-shadow:0 4px 20px ${allDays?'rgba(0,200,80,.2)':'rgba(255,215,0,.1)'};animation:cardAppear .4s ease backwards;`;
+    card.style.animationDelay = (i * 0.1) + 's';
+    card.innerHTML = `
+      <div style="font-family:'Bangers',cursive;font-size:1.1rem;color:${allDays?'#00e676':'var(--gold)'};letter-spacing:2px;margin-bottom:8px;">
+        ${allDays?'🏆':'📅'} SEMANA ${wk.week} — ${wk.month}
+      </div>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:8px 0;">
+        <div style="text-align:center;">
+          <div style="font-family:'Bangers',cursive;font-size:1.8rem;color:var(--gold);">${wk.pts}</div>
+          <div style="font-size:.7rem;color:rgba(255,255,255,.45);">pontos</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-family:'Bangers',cursive;font-size:1.8rem;color:${allDays?'#00e676':'#FF8C00'};">${wk.days}/5</div>
+          <div style="font-size:.7rem;color:rgba(255,255,255,.45);">dias completos</div>
+        </div>
+      </div>
+      <div style="font-size:.75rem;color:rgba(255,255,255,.4);margin-top:4px;">${allDays?'✅ Semana perfeita!':'⚡ '+wk.days+' de 5 dias'}</div>
+    `;
     g.appendChild(card);
   });
 }
-function toggleExtraWeek(id,w){
-  if(!state.extraWeeks[id]) state.extraWeeks[id]=[];
-  const was=state.extraWeeks[id][w]||false;
-  state.extraWeeks[id][w]=!was;
-  state.power=Math.max(0,state.power+(!was?8:-8));
-  state.totalDone=Math.max(0,state.totalDone+(!was?1:-1));
-  renderExtras(); renderBiweekly(); updateStats(); checkAchievements(); checkBiweeklyBonus();
-  if(!was) spawnBurstCenter();
-  saveState();
-}
-function renderBiweekly(){
-  const c=document.getElementById('biweeklyWeeks'); c.innerHTML='';
-  for(let w=0;w<4;w++){
-    const all=EXTRA_TASKS.every(t=>(state.extraWeeks[t.id]||[])[w]);
-    const isBonus=(w===1||w===3)&&all&&(w===0||EXTRA_TASKS.every(t=>(state.extraWeeks[t.id]||[])[w-1]));
-    const b=document.createElement('div');
-    b.className=`week-bubble${all?' done':''}${isBonus?' bonus':''}`;
-    b.innerHTML=`<span>${w===1||w===3?'🎁':'📅'}</span><span class="week-bubble-label">Sem ${w+1}</span>`;
-    c.appendChild(b);
-  }
-  const cw=Array.from({length:4},(_,w)=>EXTRA_TASKS.every(t=>(state.extraWeeks[t.id]||[])[w]));
-  const cnt=cw.filter(Boolean).length;
-  document.getElementById('biweeklyNote').textContent=cnt===0?'Complete todas as extras numa semana! ✨':cnt===1?'1 semana completa! Mais 1 para o 🎁 bônus!':'Continue assim! ⚡';
-}
-function checkBiweeklyBonus(){
-  const cw=Array.from({length:4},(_,w)=>EXTRA_TASKS.every(t=>(state.extraWeeks[t.id]||[])[w]));
-  [1,3].forEach(wi=>{
-    const key='bonus_w'+wi;
-    if(cw[wi]&&cw[wi-1]&&!state.unlockedAch.has(key)){
-      state.unlockedAch.add(key);
-      setTimeout(showBonusSurprise,600);
-    }
+
+function confirmNewWeek(){
+  const WEEK_DAYS = ['segunda','terca','quarta','quinta','sexta'];
+  const daysCompleted = WEEK_DAYS.filter(d=>state.completedDays[d]===true).length;
+  const months = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  const currentMonth = months[new Date().getMonth()];
+
+  if(!confirm(`Salvar semana ${state.currentWeek}?\n\n📅 Dias completos: ${daysCompleted}/5\n⚡ Pontos: ${state.power}\n\nIsso vai zerar os dias da semana atual.`)) return;
+
+  // Salva no histórico
+  state.weekHistory.push({
+    week: state.currentWeek,
+    days: daysCompleted,
+    pts: state.power,
+    month: currentMonth,
   });
-}
-function showBonusSurprise(){
-  document.getElementById('bonusReveal').textContent=BONUSES[Math.floor(Math.random()*BONUSES.length)];
-  openModal('bonusModal'); kiBlast(document.querySelector('.character-badge'));
+  // Máx 4 semanas por mês
+  if(state.weekHistory.length > 4) state.weekHistory = state.weekHistory.slice(-4);
+
+  state.currentWeek++;
+  state.currentMonth = currentMonth;
+
+  // Zera dias e checkmarks
+  state.completedDays = {};
+  state.spheres = 0;
+  state.streak = 0;
+
+  document.querySelectorAll('.day-panel:not(#day-extras) .activity-item').forEach(it => it.classList.remove('done'));
+  document.querySelectorAll('.day-panel:not(#day-extras)').forEach(p => {
+    const day = p.id.replace('day-','');
+    const fi = document.getElementById('fill-'+day);
+    const co = document.getElementById('count-'+day);
+    const ms = document.getElementById('complete-'+day);
+    const items = p.querySelectorAll('.activity-item');
+    if(fi) fi.style.width='0%';
+    if(co) co.textContent='0/'+items.length;
+    if(ms) ms.classList.remove('show');
+  });
+
+  updateSpheres(state.spheres, 0);
+  renderWeekHistory();
+  updateStats();
+  saveState();
+  spawnBurstCenter();
+  setTimeout(()=>alert('✅ Semana '+state.currentWeek+' começou!\nBoa sorte, guerreira! 🐉'),300);
 }
 
 // ── DRAGON MODAL ──
@@ -1103,4 +1159,4 @@ function genSparks(){const c=document.getElementById('sparks');const cls=['#FFD7
 })();
 </script>
 </body>
-</html>
+                                                                                                                                                                                                       </html>
