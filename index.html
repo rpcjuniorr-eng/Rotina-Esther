@@ -845,15 +845,8 @@ document.querySelectorAll('.day-panel:not(#day-extras)').forEach(panel => {
 if (!saved) {
   const months = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
   const currentMonth = months[new Date().getMonth()];
-  state.weekHistory = [{
-    week: 1,
-    days: 5,
-    pts: 225,
-    month: currentMonth,
-    rank: 1, // Super Saiyajin
-    achievements: ['first','hygiene','school','streak3','streak5','power100','medita3','reads5'],
-  }];
-  state.currentWeek = 2;
+  state.weekHistory = [];
+  state.currentWeek = 1;
   state.currentMonth = currentMonth;
   state.power = 0;
   state.totalDone = 0;
@@ -1199,4 +1192,4 @@ function genSparks(){const c=document.getElementById('sparks');const cls=['#FFD7
 })();
 </script>
 </body>
-  </html>
+</html>
