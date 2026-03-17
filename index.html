@@ -1002,12 +1002,17 @@ if (saved) {
   state.weekHistory   = saved.weekHistory || [];
   state.currentWeek   = saved.currentWeek || 1;
   state.currentMonth  = saved.currentMonth || '';
-  // Recalcula rank silenciosamente — só mantém se semana estava completa
+  // Recalcula rank silenciosamente
+  // Rank conquistado = max rank de semanas já salvas no histórico
+  // Se semana atual também completa, pode subir mais
   const _WD=['segunda','terca','quarta','quinta','sexta'];
   const _semanaOk = _WD.every(d=>(state.completedDays||{})[d]===true);
-  if(!_semanaOk) state.rank = 0; // semana incompleta → reseta rank para Guerreira
+  // Rank base = semanas salvas no histórico (cada semana salva = +1 rank)
+  const _histRank = state.weekHistory ? Math.min(state.weekHistory.length, RANKS.length-1) : 0;
+  // Se semana atual completa, pode ter subido mais
   let _ri=0; RANKS.forEach((r,i)=>{if(state.power>=r.min)_ri=i;});
-  if(_semanaOk) state.rank = Math.max(state.rank, _ri);
+  const _targetRank = _semanaOk ? Math.max(_histRank, _ri) : _histRank;
+  state.rank = _targetRank;
 }
 
 renderWeekHistory(); renderAchievements();
@@ -1146,12 +1151,14 @@ function updateStats(){
   if(state.spheres !== prevSpheres) updateSpheres(prevSpheres, state.spheres);
   document.getElementById('sphereVal').innerHTML=state.spheres+' <span style="font-size:.85rem;color:rgba(255,255,255,.35)">/7</span>';
 
-  // Rank sobe quando todos os 5 dias da semana estiverem completos
+  // Rank: base = semanas salvas no histórico, sobe quando semana atual completa
   const WEEK_DAYS_R=['segunda','terca','quarta','quinta','sexta'];
   const semanaCompleta = WEEK_DAYS_R.every(d=>state.completedDays[d]===true);
   const prevRank = state.rank;
+  const histRank = Math.min(state.weekHistory.length, RANKS.length-1);
   let ri=0; RANKS.forEach((r,i)=>{if(state.power>=r.min)ri=i;});
-  if(semanaCompleta) state.rank = Math.max(state.rank, ri);
+  const targetRank = semanaCompleta ? Math.max(histRank, ri) : histRank;
+  state.rank = targetRank;
   const rankExibido = state.rank;
 
   const r=RANKS[rankExibido], nextR=RANKS[rankExibido+1];
