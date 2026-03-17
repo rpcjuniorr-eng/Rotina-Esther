@@ -1003,11 +1003,11 @@ if (saved) {
   state.currentWeek   = saved.currentWeek || 1;
   state.currentMonth  = saved.currentMonth || '';
   // Recalcula rank silenciosamente — só mantém se semana estava completa
-  let _ri=0; RANKS.forEach((r,i)=>{if(state.power>=r.min)_ri=i;});
   const _WD=['segunda','terca','quarta','quinta','sexta'];
   const _semanaOk = _WD.every(d=>(state.completedDays||{})[d]===true);
+  if(!_semanaOk) state.rank = 0; // semana incompleta → reseta rank para Guerreira
+  let _ri=0; RANKS.forEach((r,i)=>{if(state.power>=r.min)_ri=i;});
   if(_semanaOk) state.rank = Math.max(state.rank, _ri);
-  // Se semana não completa, mantém o rank já conquistado (não regride, não sobe)
 }
 
 renderWeekHistory(); renderAchievements();
