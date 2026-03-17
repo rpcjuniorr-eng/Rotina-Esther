@@ -1100,9 +1100,21 @@ function updateProgress(day) {
   state.completedDays[day]=isDayDone;
   const msg=document.getElementById('complete-'+day);
   if(msg){if(isDayDone)msg.classList.add('show');else msg.classList.remove('show');}
-  if(isDayDone && !wasDayDone) { playSound('dayComplete'); setTimeout(()=>triggerCelebration(day), 300); }
-  const prev=state.spheres;
+
+  // Verifica se semana completa ANTES de tocar sons/animações
   const WEEK_DAYS=['segunda','terca','quarta','quinta','sexta'];
+  const semanaAgoraCompleta = WEEK_DAYS.every(d=>state.completedDays[d]===true);
+
+  if(isDayDone && !wasDayDone){
+    if(semanaAgoraCompleta){
+      // Semana completa — só o rank up vai aparecer (sem celebração de dia)
+      playSound('dayComplete');
+    } else {
+      playSound('dayComplete');
+      setTimeout(()=>triggerCelebration(day), 300);
+    }
+  }
+  const prev=state.spheres;
   state.spheres=WEEK_DAYS.filter(d=>state.completedDays[d]===true).length;
   updateSpheres(prev,state.spheres);
   let streak=0; for(const d of WEEK_DAYS){if(state.completedDays[d]===true)streak++;else break;}
@@ -1152,7 +1164,7 @@ function updateStats(){
   document.getElementById('rankNext').textContent=nextR?`faltam ${Math.max(0,nextR.min-state.power)} pts para ${nextR.name}`:'🌟 Rank Máximo!';
   document.getElementById('powerFill').style.width=Math.min(100,pct)+'%';
   document.getElementById('powerFill').style.background=`linear-gradient(90deg,${r.color},#FFD700)`;
-  if(rankExibido>prevRank) showRankUp(r);
+  if(rankExibido>prevRank && semanaCompleta) setTimeout(()=>showRankUp(r), 800);
   document.getElementById('achVal').textContent=state.unlockedAch.size;
 
   // Card semana
